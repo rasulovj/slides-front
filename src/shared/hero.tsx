@@ -1,5 +1,8 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+
 export const Hero = () => {
   return (
     <section className="relative flex items-center justify-center min-h-screen w-full bg-white overflow-hidden">
@@ -26,12 +29,14 @@ export const Hero = () => {
         </p>
 
         <div className="mt-10 flex justify-center gap-4">
-          <button className="bg-teal-600 text-white px-8 py-3 rounded-xl text-lg font-semibold hover:bg-teal-700 transition">
-            Get Started
-          </button>
-          <button className="border border-teal-600 text-teal-600 px-8 py-3 rounded-xl text-lg font-semibold hover:bg-teal-50 transition">
-            Learn More
-          </button>
+          <Link href={"/workspace/slides"}>
+            <Button className="p-6">Get Started</Button>
+          </Link>
+          <Link href={"/workspace/slides"}>
+            <Button variant={"outline"} className="p-6">
+              Learn More
+            </Button>
+          </Link>
         </div>
       </div>
     </section>
