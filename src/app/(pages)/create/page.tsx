@@ -1,0 +1,147 @@
+"use client";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Upload, Shuffle, X, Sparkles, FileText } from "lucide-react";
+
+const examplePrompts = [
+  "Leadership offsite presentation on cross-functional alignment",
+  "Performance insights summary",
+  "Annual report highlights",
+  "Leadership development roadmap",
+  "All-hands meeting on organizational culture transformation",
+  "Business continuity review for upcoming fiscal year",
+];
+
+export default function CreatePage() {
+  const [prompt, setPrompt] = useState("");
+  const [lang, setLang] = useState("en");
+
+  const handleGenerate = () => {
+    console.log("Generating slides for:", prompt, lang);
+  };
+
+  const handleClose = () => {
+    window.history.back();
+  };
+
+  const shufflePrompts = () => {
+    const randomPrompt =
+      examplePrompts[Math.floor(Math.random() * examplePrompts.length)];
+    setPrompt(randomPrompt);
+  };
+
+  return (
+    <div className="min-h-screen bg-linear-to-br from-white via-teal-50 to-teal-100 flex flex-col items-center justify-center px-4 py-8 relative overflow-hidden">
+      <button
+        onClick={handleClose}
+        className="absolute top-6 right-6 p-2 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg transition-all duration-200 hover:scale-110 z-10 group border border-teal-100"
+        aria-label="Close"
+      >
+        <X className="h-5 w-5 text-gray-700 group-hover:text-teal-600 transition-colors" />
+      </button>
+
+      <div className="max-w-3xl w-full text-center space-y-8 relative z-10">
+        <div className="space-y-3">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-linear-to-br from-teal-500 to-cyan-500 shadow-lg mb-4">
+            <Sparkles className="h-8 w-8 text-white" />
+          </div>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
+            Create Your Presentation
+          </h1>
+          <p className="text-gray-600 text-lg">
+            Describe your vision and let AI bring it to life
+          </p>
+        </div>
+
+        <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl p-8 space-y-6 border border-teal-100">
+          <div className="flex flex-wrap justify-center gap-3">
+            <Select value={lang} onValueChange={setLang}>
+              <SelectTrigger className="w-[150px] h-11 rounded-xl border-2 border-gray-200 hover:border-teal-300 transition-colors">
+                <SelectValue placeholder="Language" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="en">🇬🇧 English</SelectItem>
+                <SelectItem value="uz">🇺🇿 Uzbek</SelectItem>
+                <SelectItem value="ru">🇷🇺 Russian</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Button
+              variant="outline"
+              className="gap-2 cursor-not-allowed rounded-xl border-2 border-gray-200 hover:border-teal-300 hover:bg-teal-50 transition-all"
+            >
+              <Upload className="h-4 w-4" /> Add file
+            </Button>
+          </div>
+
+          <div className="relative">
+            <Textarea
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              placeholder="Describe your presentation in detail... What's the topic? Who's the audience?"
+              className="h-32 text-base resize-none border-2 border-gray-200 focus:border-teal-400 focus:ring-2 focus:ring-teal-200 transition-all shadow-sm rounded-2xl pt-4 pr-28 bg-gray-50/50 focus:bg-white"
+            />
+            <Button
+              onClick={handleGenerate}
+              disabled={!prompt}
+              className="absolute bottom-4 right-4 rounded-xl px-6 py-2 text-sm bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:shadow-xl"
+            >
+              <Sparkles className="h-4 w-4 mr-2" />
+              Generate
+            </Button>
+          </div>
+
+          <p className="text-xs text-gray-500 text-left flex items-start gap-2">
+            <span className="text-teal-500">💡</span>
+            <span>
+              Tip: Be specific about your audience, tone, and key points for
+              best results
+            </span>
+          </p>
+        </div>
+
+        <div className="mt-12">
+          <div className="flex items-center justify-center gap-2 mb-6">
+            <FileText className="h-5 w-5 text-teal-600" />
+            <h2 className="uppercase tracking-wider text-gray-600 text-sm font-semibold">
+              Example Prompts
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {examplePrompts.map((ex, i) => (
+              <button
+                key={i}
+                onClick={() => setPrompt(ex)}
+                className="text-left bg-white/80 backdrop-blur-sm hover:bg-white border-2 border-gray-200 hover:border-teal-300 rounded-2xl p-4 text-sm shadow-sm transition-all hover:shadow-md hover:scale-[1.02] group"
+              >
+                <span className="text-gray-700 group-hover:text-teal-700 transition-colors">
+                  {ex}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          <div className="flex justify-center mt-6">
+            <Button
+              variant="ghost"
+              onClick={shufflePrompts}
+              className="gap-2 text-sm hover:bg-teal-50 hover:text-teal-700 rounded-xl transition-colors"
+            >
+              <Shuffle className="h-4 w-4" /> Shuffle prompts
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,4 +1,3 @@
-// import { HydrationProvider } from "react-hydration-provider";
 "use client";
 import { Navbar } from "@/shared";
 import { usePathname } from "next/navigation";
@@ -9,15 +8,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+
+  const hideNavbar =
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname.startsWith("/workspace") ||
+    pathname.includes("/create");
+
   return (
     <html lang="en">
       <body>
         <div>
-          {pathname === "/login" ||
-          pathname === "/register" ||
-          pathname === "/workspace" ? null : (
-            <Navbar />
-          )}
+          {!hideNavbar && <Navbar />}
 
           <main className="">{children}</main>
         </div>
