@@ -5,7 +5,7 @@ export type LoginFormValues = {
 
 export interface LoginPayload {
   email: string;
-  password: string;
+  password?: string;
 }
 
 export interface LoginResponse {
