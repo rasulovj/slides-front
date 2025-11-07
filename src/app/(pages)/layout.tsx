@@ -1,6 +1,6 @@
 "use client";
-import { Navbar } from "@/shared";
 import { usePathname } from "next/navigation";
+import { Navbar } from "@/shared";
 
 export default function RootLayout({
   children,
@@ -16,14 +16,10 @@ export default function RootLayout({
     pathname.includes("/create");
 
   return (
-    <html lang="en">
-      <body>
-        <div>
-          {!hideNavbar && <Navbar />}
+    <div>
+      {!hideNavbar && <Navbar />}
 
-          <main className="">{children}</main>
-        </div>
-      </body>
-    </html>
+      <main className="">{children}</main>
+    </div>
   );
 }

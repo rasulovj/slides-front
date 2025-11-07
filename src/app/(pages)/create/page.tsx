@@ -1,16 +1,17 @@
 "use client";
-
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { useRouter } from "next/navigation";
+import { useCreateDraft } from "@/services/draftServices";
 import {
+  Button,
+  Textarea,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Upload, Shuffle, X, Sparkles, FileText } from "lucide-react";
+} from "@/components";
+import { Shuffle, X, Sparkles, FileText } from "lucide-react";
 
 const examplePrompts = [
   "Leadership offsite presentation on cross-functional alignment",
@@ -24,13 +25,25 @@ const examplePrompts = [
 export default function CreatePage() {
   const [prompt, setPrompt] = useState("");
   const [lang, setLang] = useState("en");
+  const [theme, setTheme] = useState("executive");
+  const { mutateAsync: createDraft, isPending } = useCreateDraft();
+  const router = useRouter();
 
-  const handleGenerate = () => {
-    console.log("Generating slides for:", prompt, lang);
-  };
+  const handleGenerate = async () => {
+    if (!prompt) return;
 
-  const handleClose = () => {
-    window.history.back();
+    try {
+      const { draftId } = await createDraft({
+        topic: prompt,
+        language: lang,
+        themeSlug: theme,
+      });
+
+      router.push(`/workspace/${draftId}`);
+    } catch (err: any) {
+      console.error("Failed to create draft:", err.message);
+      alert("Error: " + err.message);
+    }
   };
 
   const shufflePrompts = () => {
@@ -38,6 +51,8 @@ export default function CreatePage() {
       examplePrompts[Math.floor(Math.random() * examplePrompts.length)];
     setPrompt(randomPrompt);
   };
+
+  const handleClose = () => window.history.back();
 
   return (
     <div className="min-h-screen bg-linear-to-br from-white via-teal-50 to-teal-100 flex flex-col items-center justify-center px-4 py-8 relative overflow-hidden">
@@ -74,39 +89,29 @@ export default function CreatePage() {
                 <SelectItem value="ru">🇷🇺 Russian</SelectItem>
               </SelectContent>
             </Select>
-
-            <Button
-              variant="outline"
-              className="gap-2 cursor-not-allowed rounded-xl border-2 border-gray-200 hover:border-teal-300 hover:bg-teal-50 transition-all"
-            >
-              <Upload className="h-4 w-4" /> Add file
-            </Button>
           </div>
 
           <div className="relative">
             <Textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Describe your presentation in detail... What's the topic? Who's the audience?"
+              placeholder="Describe your presentation in detail..."
               className="h-32 text-base resize-none border-2 border-gray-200 focus:border-teal-400 focus:ring-2 focus:ring-teal-200 transition-all shadow-sm rounded-2xl pt-4 pr-28 bg-gray-50/50 focus:bg-white"
             />
             <Button
               onClick={handleGenerate}
-              disabled={!prompt}
-              className="absolute bottom-4 right-4 rounded-xl px-6 py-2 text-sm bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:shadow-xl"
+              disabled={!prompt || isPending}
+              className="absolute bottom-4 right-4 rounded-xl px-6 py-2 text-sm bg-linear-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:shadow-xl"
             >
-              <Sparkles className="h-4 w-4 mr-2" />
-              Generate
+              {isPending ? (
+                "Generating..."
+              ) : (
+                <>
+                  <Sparkles className="h-4 w-4 mr-2" /> Generate
+                </>
+              )}
             </Button>
           </div>
-
-          <p className="text-xs text-gray-500 text-left flex items-start gap-2">
-            <span className="text-teal-500">💡</span>
-            <span>
-              Tip: Be specific about your audience, tone, and key points for
-              best results
-            </span>
-          </p>
         </div>
 
         <div className="mt-12">

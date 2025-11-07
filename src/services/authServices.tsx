@@ -37,9 +37,9 @@ export const useRegister = () => {
   });
 };
 
-const getCurrentUser = async (): Promise<LoginResponse> => {
+const getMe = async (): Promise<LoginResponse> => {
   try {
-    const { data } = await api.get<LoginResponse>("/auth/me");
+    const { data } = await api.get<LoginResponse>("/users/me");
     return data;
   } catch (err) {
     const error = err as AxiosError<{ message: string }>;
@@ -47,10 +47,10 @@ const getCurrentUser = async (): Promise<LoginResponse> => {
   }
 };
 
-export const useGetCurrentUser = () => {
+export const useGetMe = () => {
   return useQuery<LoginResponse, Error>({
-    queryKey: ["currentUser"],
-    queryFn: getCurrentUser,
+    queryKey: ["getMe"],
+    queryFn: getMe,
     retry: false,
   });
 };

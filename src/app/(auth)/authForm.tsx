@@ -1,25 +1,25 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
+import Cookies from "js-cookie";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import {
+  Button,
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+  Input,
+  Label,
+} from "@/components";
+import { useLogin, useRegister } from "@/services";
+import { LoginFormValues } from "@/types";
 import { FcGoogle } from "react-icons/fc";
 import { ArrowLeft } from "lucide-react";
-import { useLogin, useRegister } from "@/services/authServices";
-import Link from "next/link";
-import { LoginFormValues } from "@/types";
-import Cookies from "js-cookie";
-import Image from "next/image";
 
 type AuthFormProps = {
   mode: "login" | "register";
@@ -42,8 +42,8 @@ export function AuthForm({ mode }: AuthFormProps) {
             description: mode === "login" ? `Welcome back` : `Welcome aboard!`,
           }
         );
-        Cookies.set("access_token", res.access_token);
-        router.push("/workspace");
+        Cookies.set("access_token", res.accessToken);
+        router.push("/");
       },
       onError: (error: Error) => {
         toast.error(mode === "login" ? "Login failed" : "Registration failed", {
@@ -55,7 +55,6 @@ export function AuthForm({ mode }: AuthFormProps) {
 
   return (
     <div className="flex min-h-screen bg-linear-to-br from-white via-teal-50 to-teal-100">
-      {/* Left Section */}
       <div className="flex flex-1 items-center justify-center p-6">
         <div className="relative w-full max-w-md">
           <Button
@@ -81,6 +80,21 @@ export function AuthForm({ mode }: AuthFormProps) {
 
             <CardContent>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                {mode === "register" ? (
+                  <>
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Name</Label>
+                      <Input
+                        id="name"
+                        type="text"
+                        placeholder="John Doe"
+                        {...register("name", { required: true })}
+                        className="rounded-xl"
+                      />
+                    </div>
+                  </>
+                ) : null}
+
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input

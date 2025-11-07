@@ -1,6 +1,9 @@
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
-import { SiteHeader } from "@/components/site-header";
+import {
+  SidebarInset,
+  SidebarProvider,
+  AppSidebar,
+  SiteHeader,
+} from "@/components";
 
 export default function RootLayout({
   children,
@@ -8,27 +11,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>
-        <SidebarProvider
-          style={
-            {
-              "--sidebar-width": "calc(var(--spacing) * 72)",
-              "--header-height": "calc(var(--spacing) * 12)",
-            } as React.CSSProperties
-          }
-        >
-          <AppSidebar variant="inset" />
-          <SidebarInset>
-            <SiteHeader />
-            <div className="flex flex-1 flex-col">
-              <div className="@container/main flex flex-1 flex-col gap-2">
-                <main className="p-6">{children}</main>
-              </div>
-            </div>
-          </SidebarInset>
-        </SidebarProvider>
-      </body>
-    </html>
+    <SidebarProvider
+      style={
+        {
+          "--sidebar-width": "calc(var(--spacing) * 72)",
+          "--header-height": "calc(var(--spacing) * 12)",
+        } as React.CSSProperties
+      }
+    >
+      <AppSidebar variant="inset" />
+      <SidebarInset>
+        <SiteHeader />
+        <div className="flex flex-1 flex-col">
+          <div className="@container/main flex flex-1 flex-col gap-2">
+            <main className="p-6">{children}</main>
+          </div>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

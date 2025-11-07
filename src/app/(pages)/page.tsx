@@ -1,9 +1,9 @@
-import Hero from "@/shared/hero";
+import { Hero } from "@/shared";
 
 export default function Home() {
   return (
-    <div className="">
+    <>
       <Hero />
-    </div>
+    </>
   );
 }

@@ -1,4 +1,5 @@
 export type LoginFormValues = {
+  name?: string;
   email: string;
   password: string;
 };
@@ -9,10 +10,11 @@ export interface LoginPayload {
 }
 
 export interface LoginResponse {
-  access_token: string;
-  refresh_token?: string;
+  accessToken: string;
   user: {
     id: string;
     email: string;
+    name: string;
+    avatar: string;
   };
 }

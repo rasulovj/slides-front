@@ -1,12 +1,11 @@
 "use client";
 
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Grid2X2, List } from "lucide-react";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
+import Image from "next/image";
 import Link from "next/link";
+import { Button, Tabs, TabsList, TabsTrigger } from "@/components";
+import { cn } from "@/lib";
+import { Grid2X2, List } from "lucide-react";
 
 const slides = [
   {

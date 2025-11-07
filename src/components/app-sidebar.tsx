@@ -4,12 +4,9 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  IconChartBar,
-  IconDatabase,
   IconFileWord,
   IconHeadset,
   IconInnerShadowTop,
-  IconListDetails,
   IconPresentationAnalytics,
   IconReport,
   IconTemplate,
@@ -26,6 +23,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+
 import { cn } from "@/lib/utils";
 
 const data = {
@@ -51,7 +49,6 @@ const data = {
       icon: IconTrash,
     },
   ],
-
   documents: [
     {
       name: "Support",
