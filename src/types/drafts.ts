@@ -51,7 +51,6 @@ export interface DraftListItem {
   lastEditedAt: string;
   createdAt: string;
 }
-
 export interface CreateDraftRequest {
   topic: string;
   language: string;

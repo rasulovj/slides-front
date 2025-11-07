@@ -21,6 +21,7 @@ import {
   useDraft,
   useGeneratePPTX,
   useReorderSlides,
+  useTheme,
   useUpdateDraft,
   useUpdateSlide,
 } from "@/services";
@@ -28,6 +29,7 @@ import { Slide } from "@/types";
 import { useDebounce } from "@/hooks/useDebounce";
 import SlidePreview from "./slidePreview";
 import SlideEditor from "./slideEditor";
+import VisualSlideEditor from "./visualEditor";
 
 export default function PresentationEditor({ draftId }: { draftId: string }) {
   const router = useRouter();
@@ -42,6 +44,7 @@ export default function PresentationEditor({ draftId }: { draftId: string }) {
   const deleteSlideMutation = useDeleteSlide(draftId);
   const reorderSlidesMutation = useReorderSlides(draftId);
   const generatePPTXMutation = useGeneratePPTX();
+  const { data: themeData } = useTheme(draft?.themeSlug || "");
 
   const debouncedTitle = useDebounce(localTitle, 1000);
 
@@ -335,15 +338,15 @@ export default function PresentationEditor({ draftId }: { draftId: string }) {
           </div>
         </aside>
 
-        <main className="flex-1 overflow-auto p-8 bg-gray-50">
-          <div className="max-w-5xl mx-auto">
-            {currentSlide && (
-              <SlideEditor
+        <main className="flex-1 overflow-auto p-8 bg-linear-to-br from-gray-50 to-gray-100">
+          <div className="max-w-6xl mx-auto">
+            {currentSlide && themeData && (
+              <VisualSlideEditor
                 slide={currentSlide}
+                theme={themeData}
                 onUpdate={(updates) =>
                   handleUpdateSlide(currentSlide.id, updates)
                 }
-                themeSlug={draft.themeSlug}
               />
             )}
           </div>

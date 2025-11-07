@@ -6,65 +6,12 @@ import Link from "next/link";
 import { Button, Tabs, TabsList, TabsTrigger } from "@/components";
 import { cn } from "@/lib";
 import { Grid2X2, List } from "lucide-react";
-
-const slides = [
-  {
-    id: 1,
-    title: "Yerlarni Takroriy Ekinlar Ekishga Tayyorlash",
-    image: "/fake.webp",
-    viewed: "8 hours ago",
-  },
-  {
-    id: 2,
-    title: "Qisqa Rotatsiyali Almashlab Ekish Tizimi",
-    image: "/fake.webp",
-    viewed: "12 days ago",
-  },
-  {
-    id: 3,
-    title: "Yerni Kuzgi Bug'doy va G'o'za Ekishga Tayyorlash",
-    image: "/fake.webp",
-    viewed: "12 days ago",
-  },
-  {
-    id: 4,
-    title: "Yerlarni Takroriy Ekinlar Ekishga Tayyorlash",
-    image: "/fake.webp",
-    viewed: "8 hours ago",
-  },
-  {
-    id: 5,
-    title: "Qisqa Rotatsiyali Almashlab Ekish Tizimi",
-    image: "/fake.webp",
-    viewed: "12 days ago",
-  },
-  {
-    id: 6,
-    title: "Yerni Kuzgi Bug'doy va G'o'za Ekishga Tayyorlash",
-    image: "/fake.webp",
-    viewed: "12 days ago",
-  },
-  {
-    id: 7,
-    title: "Yerlarni Takroriy Ekinlar Ekishga Tayyorlash",
-    image: "/fake.webp",
-    viewed: "8 hours ago",
-  },
-  {
-    id: 8,
-    title: "Qisqa Rotatsiyali Almashlab Ekish Tizimi",
-    image: "/fake.webp",
-    viewed: "12 days ago",
-  },
-  {
-    id: 9,
-    title: "Yerni Kuzgi Bug'doy va G'o'za Ekishga Tayyorlash",
-    image: "/fake.webp",
-    viewed: "12 days ago",
-  },
-];
+import { useUserDrafts } from "@/services";
 
 const Slides = () => {
+  const { data } = useUserDrafts();
+  // console.log(data.);
+
   const [view, setView] = useState<"grid" | "list">("grid");
 
   return (
@@ -122,14 +69,14 @@ const Slides = () => {
             : "flex flex-col"
         )}
       >
-        {slides.map((slide) => (
+        {data?.map((slide: any) => (
           <div
             key={slide.id}
             className="bg-card rounded-lg shadow-sm hover:shadow-md transition border overflow-hidden"
           >
             <div className="relative w-full h-40">
               <Image
-                src={slide.image}
+                src={slide.thumbnail}
                 alt={slide.title}
                 fill
                 className="object-cover"

@@ -330,3 +330,37 @@ export const useCreateDraft = () => {
     mutationFn: createDraft,
   });
 };
+
+interface Theme {
+  id: string;
+  name: string;
+  slug: string;
+  colors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+    text: string;
+    textLight: string;
+  };
+  fonts: {
+    heading: string;
+    body: string;
+  };
+}
+
+const fetchTheme = async (slug: string): Promise<Theme> => {
+  const { data } = await api.get<{ success: boolean; theme: Theme }>(
+    `/themes/${slug}`
+  );
+  return data.theme;
+};
+
+export const useTheme = (slug: string) => {
+  return useQuery<Theme, Error>({
+    queryKey: ["theme", slug],
+    queryFn: () => fetchTheme(slug),
+    enabled: !!slug,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+};
