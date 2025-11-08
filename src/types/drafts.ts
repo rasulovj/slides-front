@@ -36,6 +36,7 @@ export interface Draft {
   themeSlug: string;
   slides: Slide[];
   status: "draft" | "generating" | "completed";
+  thumbnail: string;
   lastEditedAt: string;
   createdAt: string;
   updatedAt: string;

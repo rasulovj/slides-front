@@ -30,6 +30,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import SlidePreview from "./slidePreview";
 import SlideEditor from "./slideEditor";
 import VisualSlideEditor from "./visualEditor";
+import ThumbnailUploader from "./uploadThumnail";
 
 export default function PresentationEditor({ draftId }: { draftId: string }) {
   const router = useRouter();
@@ -347,6 +348,14 @@ export default function PresentationEditor({ draftId }: { draftId: string }) {
                 onUpdate={(updates) =>
                   handleUpdateSlide(currentSlide.id, updates)
                 }
+              />
+            )}
+            {draft && themeData && !draft.thumbnail && draft.slides[0] && (
+              <ThumbnailUploader
+                draftId={draftId}
+                slide={draft.slides[0]}
+                theme={themeData}
+                currentThumbnail={draft.thumbnail}
               />
             )}
           </div>

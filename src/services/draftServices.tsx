@@ -364,3 +364,39 @@ export const useTheme = (slug: string) => {
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 };
+
+const updateDraftThumbnail = async ({
+  draftId,
+  thumbnail,
+}: {
+  draftId: string;
+  thumbnail: string;
+}): Promise<{ thumbnail: string }> => {
+  const { data } = await api.put<{ success: boolean; thumbnail: string }>(
+    `/drafts/${draftId}/thumbnail`,
+    { thumbnail }
+  );
+  return { thumbnail: data.thumbnail };
+};
+
+export const useUpdateDraftThumbnail = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    { thumbnail: string },
+    Error,
+    { draftId: string; thumbnail: string }
+  >({
+    mutationFn: updateDraftThumbnail,
+    onSuccess: (data, variables) => {
+      // Update the draft in cache
+      queryClient.setQueryData(["draft", variables.draftId], (old: any) => {
+        if (!old) return old;
+        return { ...old, thumbnail: data.thumbnail };
+      });
+
+      // Invalidate drafts list
+      queryClient.invalidateQueries({ queryKey: ["drafts"] });
+    },
+  });
+};
