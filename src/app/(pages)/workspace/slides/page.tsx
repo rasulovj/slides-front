@@ -10,7 +10,6 @@ import { useUserDrafts } from "@/services";
 
 const Slides = () => {
   const { data } = useUserDrafts();
-  // console.log(data.);
 
   const [view, setView] = useState<"grid" | "list">("grid");
 
@@ -74,25 +73,27 @@ const Slides = () => {
             key={slide.id}
             className="bg-card rounded-lg shadow-sm hover:shadow-md transition border overflow-hidden"
           >
-            <div className="relative w-full h-40">
-              <Image
-                src={slide.thumbnail}
-                alt={slide.title}
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="p-4">
-              <h3 className="text-lg font-semibold line-clamp-1">
-                {slide.title}
-              </h3>
-              <p className="text-sm text-muted-foreground mt-1">
-                Created by you
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Last viewed {slide.viewed}
-              </p>
-            </div>
+            <Link href={slide.id}>
+              <div className="relative w-full h-40">
+                <Image
+                  src={slide.thumbnail}
+                  alt={slide.title}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="p-4">
+                <h3 className="text-lg font-semibold line-clamp-1">
+                  {slide.title}
+                </h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Created by you
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Last viewed {slide.viewed}
+                </p>
+              </div>
+            </Link>
           </div>
         ))}
       </div>
