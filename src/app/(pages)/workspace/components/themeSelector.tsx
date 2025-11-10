@@ -1,4 +1,3 @@
-// components/theme/ThemeSelector.tsx
 "use client";
 
 import { useState } from "react";

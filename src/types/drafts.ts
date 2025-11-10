@@ -1,14 +1,7 @@
 // lib/types/draft.ts
 export interface Slide {
   id: string;
-  type:
-    | "title"
-    | "content"
-    | "stats"
-    | "timeline"
-    | "chart"
-    | "closing"
-    | "image";
+  type: "title" | "content" | "stats" | "timeline" | "chart" | "closing";
   title: string;
   content: string[];
   position: number;
@@ -24,7 +17,6 @@ export interface Slide {
     label: string;
     value: number;
   }[];
-  imageUrl?: string;
   notes?: string;
 }
 

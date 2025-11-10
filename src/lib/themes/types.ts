@@ -154,6 +154,5 @@ export interface SlideData {
     text: string;
     author: string;
   };
-  imageUrl?: string;
   notes?: string;
 }
