@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { useThumbnailGenerator } from "@/app/(pages)/workspace/thumnailGenerator";
+import { useThumbnailGenerator } from "@/app/(pages)/workspace/components/thumnailGenerator";
 import { useUpdateDraftThumbnail } from "@/services/draftServices";
-import SlidePreviewForThumbnail from "./slidePreviewForThumnail";
+import { SlidePreviewForThumbnail } from "./slidePreviewForThumnail";
 import { Slide } from "@/types";
-import { Loader2 } from "lucide-react";
 
 interface ThumbnailUploaderProps {
   draftId: string;
@@ -12,7 +11,7 @@ interface ThumbnailUploaderProps {
   currentThumbnail?: string | null;
 }
 
-export default function ThumbnailUploader({
+export function ThumbnailUploader({
   draftId,
   slide,
   theme,

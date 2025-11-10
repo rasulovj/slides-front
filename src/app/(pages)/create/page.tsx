@@ -10,8 +10,13 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
 } from "@/components";
 import { Shuffle, X, Sparkles, FileText } from "lucide-react";
+import { ThemeSelector } from "../workspace/components/themeSelector";
 
 const examplePrompts = [
   "Leadership offsite presentation on cross-functional alignment",
@@ -25,7 +30,9 @@ const examplePrompts = [
 export default function CreatePage() {
   const [prompt, setPrompt] = useState("");
   const [lang, setLang] = useState("en");
+  const [count, setCount] = useState("5");
   const [theme, setTheme] = useState("executive");
+  const [tempTheme, setTempTheme] = useState(theme);
   const { mutateAsync: createDraft, isPending } = useCreateDraft();
   const router = useRouter();
 
@@ -37,6 +44,7 @@ export default function CreatePage() {
         topic: prompt,
         language: lang,
         themeSlug: theme,
+        slideCount: count,
       });
 
       router.push(`/workspace/${draftId}`);
@@ -78,17 +86,66 @@ export default function CreatePage() {
         </div>
 
         <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl p-8 space-y-6 border border-teal-100">
-          <div className="flex flex-wrap justify-center gap-3">
-            <Select value={lang} onValueChange={setLang}>
-              <SelectTrigger className="w-[150px] h-11 rounded-xl border-2 border-gray-200 hover:border-teal-300 transition-colors">
-                <SelectValue placeholder="Language" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="en">🇬🇧 English</SelectItem>
-                <SelectItem value="uz">🇺🇿 Uzbek</SelectItem>
-                <SelectItem value="ru">🇷🇺 Russian</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="flex justify-center gap-2">
+            <div className="flex flex-wrap justify-center gap-3">
+              <Select value={count} onValueChange={setCount}>
+                <SelectTrigger className="w-[150px] h-11 rounded-xl border-2 border-gray-200 hover:border-teal-300 transition-colors">
+                  <SelectValue placeholder="Language" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="5">5</SelectItem>
+                  <SelectItem value="6">6</SelectItem>
+                  <SelectItem value="7">7</SelectItem>
+                  <SelectItem value="8">8</SelectItem>
+                  <SelectItem value="9">9</SelectItem>
+                  <SelectItem value="10">10</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-3">
+              <Select value={lang} onValueChange={setLang}>
+                <SelectTrigger className="w-[150px] h-11 rounded-xl border-2 border-gray-200 hover:border-teal-300 transition-colors">
+                  <SelectValue placeholder="Language" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="en">🇬🇧 English</SelectItem>
+                  <SelectItem value="uz">🇺🇿 Uzbek</SelectItem>
+                  <SelectItem value="ru">🇷🇺 Russian</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="flex justify-center">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="rounded-xl px-6 py-2 text-sm bg-linear-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white shadow-lg transition-all hover:shadow-xl">
+                  Choose Theme
+                </Button>
+              </DialogTrigger>
+              <DialogTitle>
+                <DialogContent className="max-w-lg">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4 text-center">
+                    Choose a Theme
+                  </h3>
+                  <ThemeSelector
+                    selectedThemeId={tempTheme}
+                    onSelectTheme={(id) => setTempTheme(id)}
+                  />
+                  <div className="flex justify-end mt-6">
+                    <Button
+                      onClick={() => {
+                        setTheme(tempTheme);
+                      }}
+                      className="rounded-xl px-6 py-2 text-sm bg-linear-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white shadow-lg transition-all hover:shadow-xl"
+                    >
+                      Confirm
+                    </Button>
+                  </div>
+                </DialogContent>
+              </DialogTitle>
+            </Dialog>
           </div>
 
           <div className="relative">

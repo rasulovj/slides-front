@@ -87,6 +87,12 @@ export const useUpdateDraft = (draftId: string) => {
       console.error("Failed to update draft:", error.response?.data || error);
     },
 
+    // ✅ this keeps cache and UI in sync instantly
+    onSuccess: (updatedDraft) => {
+      queryClient.setQueryData(["draft", draftId], updatedDraft);
+    },
+
+    // optional refetch after updating cache (if backend modifies fields)
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["draft", draftId] });
     },
@@ -325,7 +331,7 @@ export const useCreateDraft = () => {
   return useMutation<
     { draftId: string },
     AxiosError<{ message: string }>,
-    { topic: string; language: string; themeSlug: string }
+    { topic: string; language: string; themeSlug: string; slideCount: string }
   >({
     mutationFn: createDraft,
   });

@@ -15,3 +15,5 @@ export * from "./switch";
 export * from "./tabs";
 export * from "./textarea";
 export * from "./tooltip";
+export * from "./dialog";
+export * from "./scroll-area";

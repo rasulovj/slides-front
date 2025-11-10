@@ -61,6 +61,7 @@ export interface CreateDraftRequest {
 export interface UpdateDraftRequest {
   title?: string;
   slides?: Slide[];
+  themeSlug: string;
 }
 
 export interface AddSlideRequest {
