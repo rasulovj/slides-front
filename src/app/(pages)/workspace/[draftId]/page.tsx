@@ -14,6 +14,8 @@ import { toast } from "sonner";
 import { SlideRenderer, ThemeSelector } from "../components";
 import { useDraft, useUpdateDraft } from "@/services";
 
+import { exportToPPTX } from "@/lib/utills/exportToPptx";
+
 export default function SlideEditor({
   params,
 }: {
@@ -98,6 +100,18 @@ export default function SlideEditor({
             <Eye className="w-4 h-4" />
             Preview
           </button>
+          {/* <button
+            onClick={() => {
+              const activeTheme = themes.find(
+                (t) => t.config.id === draft.themeSlug
+              )?.config;
+              if (draft?.slides)
+                exportToPPTX(draft.slides, draft.title, activeTheme);
+            }}
+            className="flex items-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg"
+          >
+            Export PPTX
+          </button> */}
         </div>
       </header>
 
