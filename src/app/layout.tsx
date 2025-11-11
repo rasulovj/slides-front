@@ -3,8 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Providers from "@/providers/tanstack";
 import NextTopLoader from "nextjs-toploader";
 import { HydrationProvider } from "react-hydration-provider";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
-import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,23 +28,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        {/* ✅ Google tag (gtag.js) */}
-        <Script
-          strategy="afterInteractive"
-          src="https://www.googletagmanager.com/gtag/js?id=G-EMMLZCBB1Z"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-EMMLZCBB1Z', {
-              page_path: window.location.pathname,
-            });
-          `}
-        </Script>
-      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -63,6 +46,7 @@ export default function RootLayout({
           <Providers>{children}</Providers>
         </HydrationProvider>
       </body>
+      <GoogleAnalytics gaId="G-EMMLZCBB1Z" />
     </html>
   );
 }
