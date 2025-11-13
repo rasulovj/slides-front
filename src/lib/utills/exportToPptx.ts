@@ -1,184 +1,207 @@
-"use client";
+// import { SlideContentItem, SlideData, ThemeConfig } from "@/lib/themes/types";
 
-// import PptxGenJS from "pptxgenjs";
-import { SlideData, ThemeConfig } from "@/lib/themes/types";
+// const getContentItemLabel = (item: SlideContentItem) => {
+//   if (typeof item === "string") {
+//     return item;
+//   }
 
-export async function exportToPPTX(
-  slides: SlideData[],
-  title: string = "My Presentation",
-  theme: ThemeConfig
-) {
-  const { default: PptxGenJS } = await import("pptxgenjs");
-  const pptx = new PptxGenJS();
-  pptx.title = title;
+//   if ("title" in item && item.title) {
+//     return item.title;
+//   }
 
-  const colors = theme?.colors || {
-    background: "FFFFFF",
-    text: "000000",
-    primary: "2E86DE",
-    secondary: "00B894",
-    accent: "FFC300",
-  };
+//   if ("event" in item && item.event) {
+//     return item.event;
+//   }
 
-  const fonts = {
-    heading: theme?.fonts.heading.family || "Arial",
-    body: theme?.fonts.body.family || "Calibri",
-  };
+//   if ("aspect" in item && item.aspect) {
+//     return item.aspect;
+//   }
 
-  slides.forEach((slide) => {
-    const pptSlide = pptx.addSlide();
-    pptSlide.background = { color: colors.background };
+//   if ("year" in item && item.year) {
+//     return item.year;
+//   }
 
-    switch (slide.type) {
-      case "title":
-        pptSlide.addText(slide.title, {
-          x: 1,
-          y: 2,
-          w: 8,
-          h: 1,
-          fontSize: 40,
-          bold: true,
-          align: "center",
-          color: colors.primary,
-          fontFace: fonts.heading,
-        });
-        if (slide.subtitle) {
-          pptSlide.addText(slide.subtitle, {
-            x: 1,
-            y: 3,
-            w: 8,
-            h: 1,
-            fontSize: 24,
-            color: colors.text,
-            align: "center",
-            fontFace: fonts.body,
-          });
-        }
-        break;
+//   if ("description" in item && item.description) {
+//     return item.description;
+//   }
 
-      case "content":
-      case "twoColumn":
-        pptSlide.addText(slide.title, {
-          x: 0.5,
-          y: 0.3,
-          fontSize: 30,
-          bold: true,
-          color: colors.primary,
-          fontFace: fonts.heading,
-        });
-        slide.content?.forEach((line, i) => {
-          pptSlide.addText(`• ${line}`, {
-            x: 0.8,
-            y: 1.2 + i * 0.6,
-            fontSize: 20,
-            color: colors.text,
-            fontFace: fonts.body,
-          });
-        });
-        break;
+//   if ("points" in item && item.points?.length) {
+//     return item.points.join("\n");
+//   }
 
-      case "quote":
-        pptSlide.addShape(pptx.ShapeType.rect, {
-          x: 0.8,
-          y: 1.5,
-          w: 8.4,
-          h: 3.5,
-          fill: { color: colors.surface || "F8F9FA" },
-          line: { color: colors.primary, width: 1 },
-        });
-        pptSlide.addText(`"${slide.quote?.text}"`, {
-          x: 1,
-          y: 2,
-          w: 8,
-          h: 2,
-          fontSize: 30,
-          italic: true,
-          color: colors.text,
-          align: "center",
-          fontFace: fonts.heading,
-        });
-        pptSlide.addText(`— ${slide.quote?.author}`, {
-          x: 1,
-          y: 4,
-          w: 8,
-          h: 1,
-          fontSize: 20,
-          color: colors.secondary,
-          align: "center",
-          fontFace: fonts.body,
-        });
-        break;
+//   return "";
+// };
 
-      case "chart":
-        if (slide.chartData) {
-          pptSlide.addChart(pptx.ChartType.bar, slide.chartData, {
-            x: 1,
-            y: 1.5,
-            w: 8,
-            h: 4,
-            barDir: "col",
-            showValue: true,
-            valAxisTitle: slide.title,
-            chartColors: [colors.primary, colors.secondary, colors.accent],
-          });
-        }
-        break;
+// export const exportToPPTX = async (slides: SlideData[], theme: ThemeConfig) => {
+//   const pptx = new PptxGenJS();
+//   pptx.author = "Your App Name";
+//   pptx.company = "AI Presentation Builder";
+//   pptx.layout = "16x9";
+//   pptx.title = "Generated Presentation";
 
-      case "stats":
-        slide.stats?.forEach((stat, i) => {
-          pptSlide.addShape(pptx.ShapeType.rect, {
-            x: 0.8,
-            y: 0.8 + i * 2,
-            w: 8.4,
-            h: 1.4,
-            fill: { color: colors.surface || "F5F5F5" },
-            line: { color: colors.primary, width: 1 },
-          });
-          pptSlide.addText(stat.value, {
-            x: 1,
-            y: 1 + i * 2,
-            fontSize: 38,
-            bold: true,
-            color: colors.primary,
-            fontFace: fonts.heading,
-          });
-          pptSlide.addText(stat.label, {
-            x: 4,
-            y: 1 + i * 2.1,
-            fontSize: 20,
-            color: colors.text,
-            fontFace: fonts.body,
-          });
-        });
-        break;
+//   slides.forEach((slide) => {
+//     const sld = pptx.addSlide();
 
-      case "closing":
-        pptSlide.addText(slide.title || "Thank You", {
-          x: 1,
-          y: 3,
-          w: 8,
-          h: 1,
-          fontSize: 36,
-          bold: true,
-          color: colors.primary,
-          align: "center",
-          fontFace: fonts.heading,
-        });
-        break;
+//     switch (slide.type) {
+//       case "title":
+//         sld.background = { color: theme.colors.primary };
+//         sld.addText(slide.title, {
+//           x: 1,
+//           y: 2,
+//           w: 8,
+//           h: 1.5,
+//           fontFace: theme.fonts.heading.family,
+//           fontSize: 44,
+//           bold: true,
+//           color: "FFFFFF",
+//         });
 
-      default:
-        pptSlide.addText(slide.title || "Untitled", {
-          x: 1,
-          y: 3,
-          w: 8,
-          h: 1,
-          fontSize: 28,
-          color: colors.text,
-          align: "center",
-          fontFace: fonts.body,
-        });
-    }
-  });
-  // Download the presentation
-  await pptx.writeFile({ fileName: `${title}.pptx` });
-}
+//         if (slide.subtitle) {
+//           sld.addText(slide.subtitle, {
+//             x: 1,
+//             y: 3.5,
+//             w: 8,
+//             h: 1,
+//             fontFace: theme.fonts.body.family,
+//             fontSize: 24,
+//             color: "FFFFFF",
+//           });
+//         }
+//         break;
+
+//       case "content":
+//         sld.background = { color: theme.colors.background };
+//         sld.addText(slide.title, {
+//           x: 0.5,
+//           y: 0.3,
+//           fontSize: 32,
+//           bold: true,
+//           color: theme.colors.primary,
+//         });
+//         slide.content.forEach((c, i) => {
+//           const text = typeof c === "string" ? c : JSON.stringify(c, null, 2);
+//           sld.addText(`• ${text}`, {
+//             x: 1,
+//             y: 1 + i * 0.6,
+//             fontSize: 18,
+//             color: theme.colors.text,
+//             w: 8,
+//           });
+//         });
+//         break;
+
+//       case "twoColumn":
+//         sld.background = { color: theme.colors.background };
+//         sld.addText(slide.title, {
+//           x: 0.5,
+//           y: 0.3,
+//           fontSize: 30,
+//           bold: true,
+//           color: theme.colors.primary,
+//         });
+//         const col1 = slide.content.slice(
+//           0,
+//           Math.ceil(slide.content.length / 2)
+//         );
+//         const col2 = slide.content.slice(Math.ceil(slide.content.length / 2));
+//         col1.forEach((item, i) => {
+//           sld.addText(`• ${getContentItemLabel(item)}`, {
+//             x: 0.7,
+//             y: 1.2 + i * 0.6,
+//             fontSize: 18,
+//             color: theme.colors.text,
+//             w: 4,
+//           });
+//         });
+//         col2.forEach((item, i) => {
+//           sld.addText(`• ${getContentItemLabel(item)}`, {
+//             x: 5.5,
+//             y: 1.2 + i * 0.6,
+//             fontSize: 18,
+//             color: theme.colors.text,
+//             w: 4,
+//           });
+//         });
+//         break;
+
+//       case "plan":
+//         sld.background = { color: theme.colors.background };
+//         sld.addText(slide.title, {
+//           x: 0.5,
+//           y: 0.3,
+//           fontSize: 30,
+//           bold: true,
+//           color: theme.colors.primary,
+//         });
+//         const formatPlanItem = (item: SlideContentItem) => {
+//           if (typeof item === "string") {
+//             return item;
+//           }
+
+//           if ("title" in item || "points" in item) {
+//             const title = "title" in item && item.title ? item.title : "";
+//             const points =
+//               "points" in item && item.points?.length
+//                 ? item.points.join("\n")
+//                 : "";
+
+//             return [title, points].filter(Boolean).join("\n");
+//           }
+
+//           return getContentItemLabel(item);
+//         };
+//         slide.content.forEach((item, idx) => {
+//           const text = formatPlanItem(item);
+//           const colX = idx % 3;
+//           const rowY = Math.floor(idx / 3);
+//           sld.addText(text, {
+//             x: 0.5 + colX * 3,
+//             y: 1.5 + rowY * 2,
+//             w: 3,
+//             h: 1.8,
+//             fontSize: 18,
+//             color: theme.colors.text,
+//             shape: pptx.ShapeType.roundRect,
+//             fill: { color: theme.colors.surface },
+//             align: "left",
+//             margin: 0.2,
+//           });
+//         });
+//         break;
+
+//       case "stats":
+//         sld.background = { color: theme.colors.surface };
+//         sld.addText(slide.title, {
+//           x: 0.5,
+//           y: 0.3,
+//           fontSize: 30,
+//           bold: true,
+//           color: theme.colors.primary,
+//         });
+//         (slide.stats || []).forEach((stat, idx) => {
+//           sld.addText(`${stat.label}\n${stat.value}\n${stat.description}`, {
+//             x: 0.5 + (idx % 3) * 3,
+//             y: 1.5 + Math.floor(idx / 3) * 2,
+//             w: 3,
+//             h: 1.8,
+//             fontSize: 16,
+//             color: theme.colors.textDark,
+//             shape: pptx.ShapeType.roundRect,
+//             fill: { color: theme.colors.background },
+//           });
+//         });
+//         break;
+
+//       default:
+//         sld.addText(slide.title, {
+//           x: 1,
+//           y: 1,
+//           fontSize: 36,
+//           color: theme.colors.textDark,
+//         });
+//         break;
+//     }
+//   });
+
+//   pptx.writeFile({ fileName: `${theme.name}-Presentation.pptx` });
+// };

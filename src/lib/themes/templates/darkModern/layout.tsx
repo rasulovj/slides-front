@@ -6,7 +6,6 @@ export const DarkModernLayouts = {
       className="w-full h-full flex flex-col items-center justify-center text-center p-20 relative overflow-hidden"
       style={{ background: theme.colors.background }}
     >
-      {/* Animated gradient background */}
       <div
         className="absolute inset-0 opacity-20"
         style={{
@@ -14,7 +13,6 @@ export const DarkModernLayouts = {
         }}
       />
 
-      {/* Glow effect */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full blur-3xl opacity-30"
         style={{
@@ -257,7 +255,6 @@ export const DarkModernLayouts = {
                 boxShadow: `0 0 40px ${theme.colors.primary}60`,
               }}
             >
-              {/* Pulse ring */}
               <div
                 className="absolute inset-0 rounded-full animate-ping opacity-20"
                 style={{ background: theme.colors.primary }}

@@ -1,5 +1,23 @@
-// lib/themes/templates/executive/layouts.tsx
 import { SlideLayoutProps } from "../../types";
+import type { SlideSection, SlideContentItem } from "../../types";
+
+const isSlideSection = (item: SlideContentItem): item is SlideSection => {
+  return (
+    typeof item === "object" &&
+    item !== null &&
+    ("title" in item || "points" in item || "description" in item)
+  );
+};
+
+const renderItemText = (item: any): string => {
+  if (typeof item === "string") return item;
+  if (item.title && Array.isArray(item.points))
+    return `${item.title}: ${item.points.join(", ")}`;
+  if (item.year && item.event) return `${item.year} — ${item.event}`;
+  if (item.aspect && item.samsung && item.apple)
+    return `${item.aspect}: ${item.samsung} vs ${item.apple}`;
+  return JSON.stringify(item);
+};
 
 export const ExecutiveLayouts = {
   title: ({ slide, theme }: SlideLayoutProps) => (
@@ -7,32 +25,36 @@ export const ExecutiveLayouts = {
       className="relative w-full h-full overflow-hidden"
       style={{ background: theme.colors.surface }}
     >
-      <div className="absolute left-0 top-0 w-[40%] h-full bg-white" />
-
       <div
-        className="absolute right-0 top-0 w-[60%] h-full flex flex-col justify-center px-20"
-        style={{ background: theme.colors.primary }}
-      >
-        <div className="absolute top-12 left-12 flex items-center gap-4">
-          <div
-            className="w-12 h-12 rounded-full"
-            style={{ background: theme.colors.secondary }}
-          />
-          <span
-            className="text-2xl font-bold"
-            style={{
-              color: theme.colors.secondary,
-              fontFamily: theme.fonts.heading.family,
-            }}
-          >
-            LOGO
-          </span>
-        </div>
+        className="absolute right-[4%] top-[840px] w-[20%] h-[400px]"
+        style={{
+          background: theme.colors.accent,
+          transform: "rotate(20deg)",
+          transformOrigin: "bottom-right",
+        }}
+      />
+      <div
+        className="absolute right-[-10%] bottom-28 w-[60%] h-[3000px]"
+        style={{
+          background: theme.colors.primary,
+          transform: "rotate(-12deg)",
+          transformOrigin: "top right",
+        }}
+      />
+      <div
+        className="absolute right-[-12%] bottom-28 w-[50%] h-[3000px]"
+        style={{
+          background: theme.colors.secondary,
+          transform: "rotate(-12deg)",
+          transformOrigin: "top right",
+        }}
+      />
 
+      <div className="relative z-10 h-full flex flex-col justify-center px-20">
         <h1
-          className="text-7xl font-bold mb-8 leading-tight"
+          className="text-7xl font-bold leading-tight max-w-4xl"
           style={{
-            color: "#FFFFFF",
+            color: "#333",
             fontFamily: theme.fonts.heading.family,
             fontWeight: theme.fonts.heading.weight.bold,
           }}
@@ -41,37 +63,34 @@ export const ExecutiveLayouts = {
         </h1>
 
         {slide.subtitle && (
-          <p
-            className="text-3xl"
+          <div
+            className="max-w-[600px] flex items-center h-[100px] mt-20 p-4 rounded-lg"
             style={{
-              color: "rgba(255,255,255,0.9)",
-              fontFamily: theme.fonts.body.family,
+              backgroundColor: theme.colors.primary,
             }}
           >
-            {slide.subtitle}
-          </p>
-        )}
-
-        <div className="absolute bottom-12 left-0 right-0 px-12">
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-white/20" />
-            <div>
-              <div className="text-xl font-semibold text-white">Your Name</div>
-              <div className="text-lg text-white/80">Your Designation</div>
-            </div>
+            <p
+              className="text-4xl"
+              style={{
+                color: theme.colors.textLight,
+                fontFamily: theme.fonts.body.family,
+              }}
+            >
+              {slide.subtitle}
+            </p>
           </div>
-        </div>
+        )}
       </div>
     </div>
   ),
 
-  content: ({ slide, theme }: SlideLayoutProps) => (
+  plan: ({ slide, theme }: SlideLayoutProps) => (
     <div
-      className="w-full h-full relative"
+      className="w-full h-full p-20"
       style={{ background: theme.colors.background }}
     >
       <div
-        className="absolute top-0 left-0 right-0 h-28 flex items-center px-20"
+        className="absolute top-0 left-0 right-0 h-48 flex items-center px-20"
         style={{ background: theme.colors.primary }}
       >
         <h2
@@ -84,16 +103,138 @@ export const ExecutiveLayouts = {
           {slide.title}
         </h2>
       </div>
-
       <div
-        className="absolute top-0 right-0 w-32 h-32"
+        className="absolute top-0 right-0 w-32 h-56"
         style={{
           background: theme.colors.secondary,
           clipPath: "polygon(100% 0, 0 0, 100% 100%)",
         }}
       />
 
-      <div className="pt-40 px-20">
+      <div className="flex flex-col gap-4 mt-32">
+        {slide.content.map((item, idx) => {
+          if (typeof item === "string") {
+            return (
+              <div
+                key={idx}
+                className="p-8 rounded-2xl shadow-md bg-white border border-gray-100"
+              >
+                <p
+                  className="text-2xl leading-relaxed"
+                  style={{
+                    color: theme.colors.text,
+                    fontFamily: theme.fonts.body.family,
+                  }}
+                >
+                  {item}
+                </p>
+              </div>
+            );
+          }
+
+          if (isSlideSection(item)) {
+            return (
+              <div
+                key={idx}
+                className="p-8 rounded-2xl shadow-md bg-white border border-gray-100 flex flex-col"
+              >
+                {item.title && (
+                  <h3
+                    className="text-3xl font-semibold mb-4"
+                    style={{
+                      color: theme.colors.primary,
+                      fontFamily: theme.fonts.heading.family,
+                    }}
+                  >
+                    {item.title}
+                  </h3>
+                )}
+                {Array.isArray(item.points) && (
+                  <ul className="space-y-3">
+                    {item.points.map((point, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-2 text-2xl"
+                        style={{
+                          color: theme.colors.text,
+                          fontFamily: theme.fonts.body.family,
+                        }}
+                      >
+                        <span
+                          className="text-primary text-3xl leading-none"
+                          style={{ color: theme.colors.accent }}
+                        >
+                          •
+                        </span>
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {item.description && (
+                  <p
+                    className="mt-4 text-2xl text-gray-600"
+                    style={{
+                      color: theme.colors.textLight,
+                      fontFamily: theme.fonts.body.family,
+                    }}
+                  >
+                    {item.description}
+                  </p>
+                )}
+              </div>
+            );
+          }
+
+          return (
+            <div
+              key={idx}
+              className="p-8 rounded-2xl shadow-md bg-white border border-gray-100"
+            >
+              <p
+                className="text-2xl leading-relaxed"
+                style={{
+                  color: theme.colors.text,
+                  fontFamily: theme.fonts.body.family,
+                }}
+              >
+                {renderItemText(item)}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  ),
+
+  content: ({ slide, theme }: SlideLayoutProps) => (
+    <div
+      className="w-full h-full relative"
+      style={{ background: theme.colors.background }}
+    >
+      <div
+        className="absolute top-0 left-0 right-0 h-48 flex items-center px-20"
+        style={{ background: theme.colors.primary }}
+      >
+        <h2
+          className="text-5xl font-bold"
+          style={{
+            color: "#FFFFFF",
+            fontFamily: theme.fonts.heading.family,
+          }}
+        >
+          {slide.title}
+        </h2>
+      </div>
+      <div
+        className="absolute top-0 right-0 w-32 h-56"
+        style={{
+          background: theme.colors.secondary,
+          clipPath: "polygon(100% 0, 0 0, 100% 100%)",
+        }}
+      />
+
+      <div className="pt-56 px-20">
         <ul className="space-y-8">
           {slide.content.map((item, idx) => (
             <li key={idx} className="flex items-start gap-6">
@@ -110,7 +251,7 @@ export const ExecutiveLayouts = {
                   fontFamily: theme.fonts.body.family,
                 }}
               >
-                {item}
+                {renderItemText(item)}
               </span>
             </li>
           ))}
@@ -119,45 +260,182 @@ export const ExecutiveLayouts = {
     </div>
   ),
 
-  stats: ({ slide, theme }: SlideLayoutProps) => (
-    <div
-      className="w-full h-full p-20"
-      style={{ background: theme.colors.background }}
-    >
-      <h2
-        className="text-6xl font-bold mb-16"
-        style={{
-          color: theme.colors.text,
-          fontFamily: theme.fonts.heading.family,
-        }}
-      >
-        {slide.title}
-      </h2>
+  cards: ({ slide, theme }: SlideLayoutProps) => {
+    if (!slide.content || slide.content.length === 0) {
+      return (
+        <div
+          className="w-full h-full flex items-center justify-center text-4xl text-gray-500"
+          style={{ background: theme.colors.background }}
+        >
+          No content available
+        </div>
+      );
+    }
 
-      <div className="space-y-12">
-        {slide.stats?.map((stat, idx) => (
-          <div key={idx} className="flex items-center gap-10">
+    const parseCard = (item: string) => {
+      if (typeof item !== "string") return { title: "Untitled", desc: "" };
+      const [title, ...descParts] = item.split(":");
+      return {
+        title: title.trim(),
+        desc: descParts.join(":").trim(),
+      };
+    };
+
+    return (
+      <div
+        className="w-full h-full p-20 flex flex-col"
+        style={{ background: theme.colors.background }}
+      >
+        <div
+          className="absolute top-0 left-0 right-0 h-48 flex items-center px-20"
+          style={{ background: theme.colors.primary }}
+        >
+          <h2
+            className="text-5xl font-bold"
+            style={{
+              color: "#FFFFFF",
+              fontFamily: theme.fonts.heading.family,
+            }}
+          >
+            {slide.title}
+          </h2>
+        </div>
+        <div
+          className="absolute top-0 right-0 w-32 h-56"
+          style={{
+            background: theme.colors.secondary,
+            clipPath: "polygon(100% 0, 0 0, 100% 100%)",
+          }}
+        />
+
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-10 flex-1 items-center justify-center">
+          {slide.content.map((item, idx) => {
+            const { title, desc } = parseCard(item as string);
+
+            return (
+              <div
+                key={idx}
+                className="flex flex-col justify-between p-8 rounded-3xl shadow-lg border transition-transform hover:scale-105"
+                style={{
+                  background: theme.colors.surface,
+                  borderColor: theme.colors.border,
+                }}
+              >
+                <h3
+                  className="text-3xl font-semibold mb-4"
+                  style={{
+                    color: theme.colors.primary,
+                    fontFamily: theme.fonts.heading.family,
+                  }}
+                >
+                  {title}
+                </h3>
+                <p
+                  className="text-2xl leading-relaxed flex-1"
+                  style={{
+                    color: theme.colors.text,
+                    fontFamily: theme.fonts.body.family,
+                  }}
+                >
+                  {desc}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  },
+
+  stats: ({ slide, theme }: SlideLayoutProps) => {
+    let stats: { label: string; value: string; description: string }[] = [];
+
+    if (slide.stats && slide.stats.length > 0) {
+      stats = slide.stats.map((s) => ({
+        label: s.label,
+        value: s.value,
+        description: s.description ?? "",
+      }));
+    } else if (slide.content && slide.content.length >= 3) {
+      for (let i = 0; i < slide.content.length; i += 3) {
+        const label = slide.content[i] as string;
+        const value = slide.content[i + 1] as string;
+        const description = slide.content[i + 2] as string;
+        if (label && value && description) {
+          stats.push({ label, value, description });
+        }
+      }
+    }
+
+    if (stats.length === 0) {
+      return (
+        <div
+          className="w-full h-full flex items-center justify-center text-4xl text-gray-500"
+          style={{ background: theme.colors.background }}
+        >
+          No statistics available
+        </div>
+      );
+    }
+
+    return (
+      <div
+        className="w-full h-full p-20"
+        style={{ background: theme.colors.background }}
+      >
+        <div
+          className="absolute top-0 left-0 right-0 h-48 flex items-center px-20"
+          style={{ background: theme.colors.primary }}
+        >
+          <h2
+            className="text-5xl font-bold"
+            style={{
+              color: "#FFFFFF",
+              fontFamily: theme.fonts.heading.family,
+            }}
+          >
+            {slide.title}
+          </h2>
+        </div>
+
+        <div
+          className="absolute top-0 right-0 w-32 h-56"
+          style={{
+            background: theme.colors.secondary,
+            clipPath: "polygon(100% 0, 0 0, 100% 100%)",
+          }}
+        />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 pt-72">
+          {stats.map((stat, idx) => (
             <div
-              className="text-9xl font-bold"
+              key={idx}
+              className="flex flex-col items-center justify-center text-center rounded-3xl shadow-xl border p-10 hover:shadow-2xl transition-all"
               style={{
-                color: theme.colors.primary,
-                fontFamily: theme.fonts.heading.family,
+                background: theme.colors.surface,
+                borderColor: theme.colors.border,
               }}
             >
-              {stat.value}
-            </div>
-            <div className="flex-1">
               <div
-                className="text-4xl font-semibold mb-3"
+                className="text-7xl font-bold mb-4"
                 style={{
-                  color: theme.colors.text,
+                  color: theme.colors.primary,
+                  fontFamily: theme.fonts.heading.family,
+                }}
+              >
+                {stat.value}
+              </div>
+              <div
+                className="text-3xl font-semibold mb-3"
+                style={{
+                  color: theme.colors.textDark,
                   fontFamily: theme.fonts.heading.family,
                 }}
               >
                 {stat.label}
               </div>
               <div
-                className="text-2xl"
+                className="text-2xl leading-relaxed"
                 style={{
                   color: theme.colors.textLight,
                   fontFamily: theme.fonts.body.family,
@@ -166,71 +444,150 @@ export const ExecutiveLayouts = {
                 {stat.description}
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
-  ),
+    );
+  },
 
-  chart: ({ slide, theme }: SlideLayoutProps) => (
-    <div
-      className="w-full h-full p-20"
-      style={{ background: theme.colors.background }}
-    >
-      <h2
-        className="text-6xl font-bold mb-12"
-        style={{
-          color: theme.colors.text,
-          fontFamily: theme.fonts.heading.family,
-        }}
+  chart: ({ slide, theme }: SlideLayoutProps) => {
+    // 🧠 Parse chart data intelligently
+    let chartData: { label: string; value: number }[] = [];
+
+    if (slide.chartData && slide.chartData.length > 0) {
+      // Use structured data if available
+      chartData = slide.chartData;
+    } else if (slide.content && slide.content.length > 4) {
+      // Handle flat format
+      const content = slide.content as string[];
+      const [, , ...pairs] = content; // skip headers (Year, Units Sold)
+      for (let i = 0; i < pairs.length; i += 2) {
+        const label = pairs[i];
+        const value = parseFloat(pairs[i + 1]);
+        if (label && !isNaN(value)) {
+          chartData.push({ label, value });
+        }
+      }
+    }
+
+    if (chartData.length === 0) {
+      return (
+        <div
+          className="w-full h-full flex items-center justify-center text-4xl text-gray-500"
+          style={{ background: theme.colors.background }}
+        >
+          No chart data available
+        </div>
+      );
+    }
+
+    // Calculate max value for scaling
+    const maxValue = Math.max(...chartData.map((d) => d.value));
+
+    return (
+      <div
+        className="w-full h-full p-20 flex flex-col"
+        style={{ background: theme.colors.background }}
       >
-        {slide.title}
-      </h2>
+        <div
+          className="absolute top-0 left-0 right-0 h-48 flex items-center px-20 mb-12"
+          style={{ background: theme.colors.primary }}
+        >
+          <h2
+            className="text-5xl font-bold"
+            style={{
+              color: "#FFFFFF",
+              fontFamily: theme.fonts.heading.family,
+            }}
+          >
+            {slide.title}
+          </h2>
+        </div>
 
-      <div className="flex items-end justify-around h-[600px] gap-8">
-        {slide.chartData?.map((item, idx) => (
-          <div key={idx} className="flex flex-col items-center flex-1 h-full">
-            <div className="flex-1 w-full flex items-end">
+        <div
+          className="absolute top-0 right-0 w-32 h-56"
+          style={{
+            background: theme.colors.secondary,
+            clipPath: "polygon(100% 0, 0 0, 100% 100%)",
+          }}
+        />
+
+        <div className="flex-1 flex items-end justify-around gap-10 pb-10 pt-52">
+          {chartData.map((item, idx) => {
+            const heightPercent = (item.value / maxValue) * 100;
+
+            return (
               <div
-                className="w-full rounded-t-3xl transition-all duration-500 flex items-end justify-center pb-8"
-                style={{
-                  height: `${item.value}%`,
-                  background: `linear-gradient(to top, ${theme.colors.primary}, ${theme.colors.secondary})`,
-                }}
+                key={idx}
+                className="flex flex-col items-center justify-end flex-1 h-full"
               >
-                <span className="text-4xl font-bold text-white">
-                  {item.value}%
-                </span>
+                <div
+                  className="w-full rounded-t-3xl flex items-end justify-center transition-all duration-500"
+                  style={{
+                    height: `${heightPercent}%`,
+                    background: `linear-gradient(to top, ${theme.colors.primary}, ${theme.colors.secondary})`,
+                  }}
+                >
+                  <span
+                    className="text-3xl font-bold text-white mb-4"
+                    style={{
+                      fontFamily: theme.fonts.heading.family,
+                    }}
+                  >
+                    {item.value}
+                  </span>
+                </div>
+                <div
+                  className="mt-4 text-2xl font-semibold"
+                  style={{
+                    color: theme.colors.text,
+                    fontFamily: theme.fonts.body.family,
+                  }}
+                >
+                  {item.label}
+                </div>
               </div>
-            </div>
-            <div
-              className="mt-6 text-2xl font-semibold"
-              style={{ color: theme.colors.text }}
-            >
-              {item.label}
-            </div>
-          </div>
-        ))}
+            );
+          })}
+        </div>
+
+        {/* X-axis label */}
+        <div className="mt-6 text-center text-2xl text-gray-500">
+          (in Millions)
+        </div>
       </div>
-    </div>
-  ),
+    );
+  },
 
   timeline: ({ slide, theme }: SlideLayoutProps) => (
     <div
       className="w-full h-full p-20"
       style={{ background: theme.colors.background }}
     >
-      <h2
-        className="text-6xl font-bold mb-20"
-        style={{
-          color: theme.colors.text,
-          fontFamily: theme.fonts.heading.family,
-        }}
+      <div
+        className="absolute top-0 left-0 right-0 h-48 flex items-center px-20 mb-12"
+        style={{ background: theme.colors.primary }}
       >
-        {slide.title}
-      </h2>
+        <h2
+          className="text-5xl font-bold"
+          style={{
+            color: "#FFFFFF",
+            fontFamily: theme.fonts.heading.family,
+          }}
+        >
+          {slide.title}
+        </h2>
+      </div>
 
-      <div className="flex justify-around items-start gap-4">
+      <div
+        className="absolute top-0 right-0 w-32 h-56"
+        style={{
+          background: theme.colors.secondary,
+          clipPath: "polygon(100% 0, 0 0, 100% 100%)",
+        }}
+      />
+
+      <div className="flex justify-around items-start gap-4 pt-72">
         {slide.content.slice(0, 4).map((item, idx) => (
           <div
             key={idx}
@@ -252,7 +609,7 @@ export const ExecutiveLayouts = {
                 fontFamily: theme.fonts.body.family,
               }}
             >
-              {item}
+              {renderItemText(item)}
             </p>
           </div>
         ))}
@@ -290,75 +647,363 @@ export const ExecutiveLayouts = {
     </div>
   ),
 
-  twoColumn: ({ slide, theme }: SlideLayoutProps) => (
-    <div
-      className="w-full h-full p-20"
-      style={{ background: theme.colors.background }}
-    >
-      <h2
-        className="text-6xl font-bold mb-16"
-        style={{
-          color: theme.colors.text,
-          fontFamily: theme.fonts.heading.family,
-        }}
-      >
-        {slide.title}
-      </h2>
+  twoColumn: ({ slide, theme }: SlideLayoutProps) => {
+    const isComparison =
+      slide.content.length === 2 &&
+      slide.content.every(
+        (item: any) => item?.title && Array.isArray(item?.points)
+      );
 
-      <div className="grid grid-cols-2 gap-16 h-[700px]">
-        <div>
-          <ul className="space-y-6">
-            {slide.content
-              .slice(0, Math.ceil(slide.content.length / 2))
-              .map((item, idx) => (
-                <li key={idx} className="flex items-start gap-4">
-                  <span
-                    className="text-4xl font-bold"
-                    style={{ color: theme.colors.primary }}
-                  >
-                    •
-                  </span>
-                  <span
-                    className="text-3xl flex-1"
+    if (isComparison) {
+      const [left, right] = slide.content as any[];
+
+      return (
+        <div
+          className="w-full h-full p-20"
+          style={{ background: theme.colors.background }}
+        >
+          {/* <div
+            className="absolute top-0 left-0 right-0 h-48 flex items-center px-20 mb-12"
+            style={{ background: theme.colors.primary }}
+          >
+            <h2
+              className="text-5xl font-bold"
+              style={{
+                color: "#FFFFFF",
+                fontFamily: theme.fonts.heading.family,
+              }}
+            >
+              {slide.title}
+            </h2>
+          </div>
+
+          <div
+            className="absolute top-0 right-0 w-32 h-56"
+            style={{
+              background: theme.colors.secondary,
+              clipPath: "polygon(100% 0, 0 0, 100% 100%)",
+            }}
+          /> */}
+
+          <div className="grid grid-cols-2 gap-12 h-[700px]">
+            <div className="bg-white border border-gray-200 rounded-3xl shadow-lg p-10 flex flex-col">
+              <h3
+                className="text-4xl font-bold mb-6 text-center"
+                style={{
+                  color: theme.colors.primary,
+                  fontFamily: theme.fonts.heading.family,
+                }}
+              >
+                {left.title}
+              </h3>
+              <ul className="space-y-4">
+                {left.points.map((p: string, i: number) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-3 text-2xl leading-relaxed"
                     style={{
                       color: theme.colors.text,
                       fontFamily: theme.fonts.body.family,
                     }}
                   >
-                    {item}
-                  </span>
-                </li>
-              ))}
-          </ul>
+                    <span
+                      className="text-3xl leading-none"
+                      style={{ color: theme.colors.accent }}
+                    >
+                      •
+                    </span>
+                    {p}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="bg-white border border-gray-200 rounded-3xl shadow-lg p-10 flex flex-col">
+              <h3
+                className="text-4xl font-bold mb-6 text-center"
+                style={{
+                  color: theme.colors.secondary,
+                  fontFamily: theme.fonts.heading.family,
+                }}
+              >
+                {right.title}
+              </h3>
+              <ul className="space-y-4">
+                {right.points.map((p: string, i: number) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-3 text-2xl leading-relaxed"
+                    style={{
+                      color: theme.colors.text,
+                      fontFamily: theme.fonts.body.family,
+                    }}
+                  >
+                    <span
+                      className="text-3xl leading-none"
+                      style={{ color: theme.colors.accent }}
+                    >
+                      •
+                    </span>
+                    {p}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
-        <div>
-          <ul className="space-y-6">
-            {slide.content
-              .slice(Math.ceil(slide.content.length / 2))
-              .map((item, idx) => (
-                <li key={idx} className="flex items-start gap-4">
+      );
+    }
+
+    // 🧩 Default fallback (multi-item content layout)
+    const half = Math.ceil(slide.content.length / 2);
+    const columns = [slide.content.slice(0, half), slide.content.slice(half)];
+
+    const renderContentItem = (item: any, idx: number) => {
+      if (typeof item === "string") {
+        return (
+          <li key={idx} className="flex items-start gap-4">
+            <span
+              className="text-4xl font-bold"
+              style={{ color: theme.colors.primary }}
+            >
+              •
+            </span>
+            <span
+              className="text-3xl flex-1 leading-relaxed"
+              style={{
+                color: theme.colors.text,
+                fontFamily: theme.fonts.body.family,
+              }}
+            >
+              {item}
+            </span>
+          </li>
+        );
+      }
+
+      if (item.title && Array.isArray(item.points)) {
+        return (
+          <li
+            key={idx}
+            className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm"
+          >
+            <h3
+              className="text-3xl font-semibold mb-4"
+              style={{
+                color: theme.colors.primary,
+                fontFamily: theme.fonts.heading.family,
+              }}
+            >
+              {item.title}
+            </h3>
+            <ul className="space-y-3">
+              {item.points.map((p: string, i: number) => (
+                <li
+                  key={i}
+                  className="flex items-start gap-2 text-2xl"
+                  style={{
+                    color: theme.colors.text,
+                    fontFamily: theme.fonts.body.family,
+                  }}
+                >
                   <span
-                    className="text-4xl font-bold"
-                    style={{ color: theme.colors.primary }}
+                    className="text-3xl leading-none"
+                    style={{ color: theme.colors.accent }}
                   >
                     •
                   </span>
-                  <span
-                    className="text-3xl flex-1"
-                    style={{
-                      color: theme.colors.text,
-                      fontFamily: theme.fonts.body.family,
-                    }}
-                  >
-                    {item}
-                  </span>
+                  {p}
                 </li>
               ))}
-          </ul>
+            </ul>
+          </li>
+        );
+      }
+
+      return (
+        <li
+          key={idx}
+          className="text-3xl"
+          style={{ fontFamily: theme.fonts.body.family }}
+        >
+          {JSON.stringify(item)}
+        </li>
+      );
+    };
+
+    return (
+      <div
+        className="w-full h-full p-20"
+        style={{ background: theme.colors.background }}
+      >
+        <h2
+          className="text-6xl font-bold mb-16"
+          style={{
+            color: theme.colors.text,
+            fontFamily: theme.fonts.heading.family,
+          }}
+        >
+          {slide.title}
+        </h2>
+
+        <div className="grid grid-cols-2 gap-16 h-[700px] overflow-y-auto">
+          {columns.map((col, colIdx) => (
+            <ul key={colIdx} className="space-y-6">
+              {col.map((item, idx) => renderContentItem(item, idx))}
+            </ul>
+          ))}
         </div>
       </div>
-    </div>
-  ),
+    );
+  },
+  comparison: ({ slide, theme }: SlideLayoutProps) => {
+    if (!slide.content || slide.content.length < 4) {
+      return (
+        <div
+          className="w-full h-full flex items-center justify-center text-4xl text-gray-500"
+          style={{ background: theme.colors.background }}
+        >
+          Not enough data for comparison
+        </div>
+      );
+    }
+
+    // 🧠 Detect structured (object) vs flat (string) format
+    const isStructured = slide.content.every((c: any) => typeof c === "object");
+    let left: any = {};
+    let right: any = {};
+
+    if (isStructured) {
+      // Already objects like [{title, points}, {title, points}]
+      [left, right] = slide.content as any[];
+    } else {
+      // Flat list like ["MacBook Air", "...", "MacBook Pro", "..."]
+      const mid = Math.floor(slide.content.length / 2);
+      const leftTitle = slide.content[0];
+      const rightTitle = slide.content[mid];
+
+      left = {
+        title: leftTitle,
+        points: slide.content.slice(1, mid),
+      };
+      right = {
+        title: rightTitle,
+        points: slide.content.slice(mid + 1),
+      };
+    }
+
+    return (
+      <div
+        className="w-full h-full p-20 flex flex-col items-center justify-center"
+        style={{ background: theme.colors.background }}
+      >
+        <div
+          className="absolute top-0 left-0 right-0 h-48 flex items-center px-20 mb-12"
+          style={{ background: theme.colors.primary }}
+        >
+          <h2
+            className="text-5xl font-bold"
+            style={{
+              color: "#FFFFFF",
+              fontFamily: theme.fonts.heading.family,
+            }}
+          >
+            {slide.title}
+          </h2>
+        </div>
+
+        <div
+          className="absolute top-0 right-0 w-32 h-56"
+          style={{
+            background: theme.colors.secondary,
+            clipPath: "polygon(100% 0, 0 0, 100% 100%)",
+          }}
+        />
+
+        {/* Comparison Grid */}
+        <div className="relative grid grid-cols-2 gap-12 w-full max-w-6xl">
+          {/* Left Column */}
+          <div className="bg-white rounded-3xl shadow-lg border border-gray-200 p-10 flex flex-col">
+            <h3
+              className="text-4xl font-bold mb-6 text-center uppercase"
+              style={{
+                color: theme.colors.primary,
+                fontFamily: theme.fonts.heading.family,
+              }}
+            >
+              {left.title}
+            </h3>
+            <ul className="space-y-4">
+              {left.points?.map((p: string, i: number) => (
+                <li
+                  key={i}
+                  className="flex items-start gap-3 text-2xl leading-relaxed"
+                  style={{
+                    color: theme.colors.text,
+                    fontFamily: theme.fonts.body.family,
+                  }}
+                >
+                  <span
+                    className="text-3xl leading-none"
+                    style={{ color: theme.colors.accent }}
+                  >
+                    •
+                  </span>
+                  {p}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="bg-white rounded-3xl shadow-lg border border-gray-200 p-10 flex flex-col">
+            <h3
+              className="text-4xl font-bold mb-6 text-center uppercase"
+              style={{
+                color: theme.colors.secondary,
+                fontFamily: theme.fonts.heading.family,
+              }}
+            >
+              {right.title}
+            </h3>
+            <ul className="space-y-4">
+              {right.points?.map((p: string, i: number) => (
+                <li
+                  key={i}
+                  className="flex items-start gap-3 text-2xl leading-relaxed"
+                  style={{
+                    color: theme.colors.text,
+                    fontFamily: theme.fonts.body.family,
+                  }}
+                >
+                  <span
+                    className="text-3xl leading-none"
+                    style={{ color: theme.colors.accent }}
+                  >
+                    •
+                  </span>
+                  {p}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="absolute left-1/2 top-0 bottom-0 flex flex-col items-center justify-center">
+            <div className="w-[3px] h-full bg-gray-300 opacity-50"></div>
+            <div
+              className="absolute text-5xl font-extrabold text-white px-6 py-4 rounded-full shadow-lg"
+              style={{
+                background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
+                fontFamily: theme.fonts.heading.family,
+                transform: "translateY(-50%)",
+              }}
+            >
+              VS
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  },
 
   closing: ({ slide, theme }: SlideLayoutProps) => (
     <div
@@ -367,7 +1012,6 @@ export const ExecutiveLayouts = {
         background: `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`,
       }}
     >
-      {/* Logo */}
       <div className="flex items-center gap-4 mb-12">
         <div
           className="w-16 h-16 rounded-full"
@@ -402,7 +1046,7 @@ export const ExecutiveLayouts = {
             fontFamily: theme.fonts.body.family,
           }}
         >
-          {slide.content[0]}
+          {renderItemText(slide.content[0])}
         </p>
       )}
 

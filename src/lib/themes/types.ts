@@ -1,17 +1,18 @@
 // lib/themes/types.ts
+
 export interface ThemeColors {
-  primary: string;
-  secondary: string;
-  accent: string;
-  background: string;
-  surface: string;
-  text: string;
-  textLight: string;
-  textDark: string;
-  border: string;
-  success: string;
-  warning: string;
-  error: string;
+  primary?: string;
+  secondary?: string;
+  accent?: string;
+  background?: string;
+  surface?: string;
+  text?: string;
+  textLight?: string;
+  textDark?: string;
+  border?: string;
+  success?: string;
+  warning?: string;
+  error?: string;
   gradient?: {
     start: string;
     end: string;
@@ -110,6 +111,65 @@ export interface ThemeConfig {
   };
 }
 
+/* ------------ SLIDE DATA STRUCTURE ------------ */
+
+// Common slide content formats
+export interface SlideSection {
+  title?: string;
+  points?: string[];
+  description?: string;
+}
+
+export interface TimelineEvent {
+  year?: string;
+  event?: string;
+}
+
+export interface ComparisonItem {
+  aspect?: string;
+  samsung?: string;
+  apple?: string;
+}
+
+// Type union for all valid content item types
+export type SlideContentItem =
+  | string
+  | SlideSection
+  | TimelineEvent
+  | ComparisonItem;
+
+/* ------------ THEME & LAYOUT TYPES ------------ */
+
+export interface SlideData {
+  id: string;
+  type: keyof ThemeLayouts;
+  title: string;
+  subtitle?: string;
+  content: SlideContentItem[];
+
+  layout?: string;
+
+  stats?: Array<{
+    label: string;
+    value: string;
+    description?: string;
+    icon?: string;
+  }>;
+
+  chartData?: Array<{
+    label: string;
+    value: number;
+    color?: string;
+  }>;
+
+  quote?: {
+    text: string;
+    author: string;
+  };
+
+  notes?: string;
+}
+
 export interface SlideLayoutProps {
   slide: SlideData;
   theme: ThemeConfig;
@@ -119,7 +179,10 @@ export interface SlideLayoutProps {
 export interface ThemeLayouts {
   title: React.ComponentType<SlideLayoutProps>;
   content: React.ComponentType<SlideLayoutProps>;
+  plan: React.ComponentType<SlideLayoutProps>;
   stats: React.ComponentType<SlideLayoutProps>;
+  comparison: React.ComponentType<SlideLayoutProps>;
+  cards: React.ComponentType<SlideLayoutProps>;
   chart: React.ComponentType<SlideLayoutProps>;
   timeline: React.ComponentType<SlideLayoutProps>;
   quote: React.ComponentType<SlideLayoutProps>;
@@ -130,29 +193,4 @@ export interface ThemeLayouts {
 export interface Theme {
   config: ThemeConfig;
   layouts: ThemeLayouts;
-}
-
-export interface SlideData {
-  id: string;
-  type: keyof ThemeLayouts;
-  title: string;
-  subtitle?: string;
-  content: string[];
-  layout?: string;
-  stats?: Array<{
-    label: string;
-    value: string;
-    description: string;
-    icon?: string;
-  }>;
-  chartData?: Array<{
-    label: string;
-    value: number;
-    color?: string;
-  }>;
-  quote?: {
-    text: string;
-    author: string;
-  };
-  notes?: string;
 }

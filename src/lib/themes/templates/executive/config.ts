@@ -9,18 +9,17 @@ export const executiveConfig: ThemeConfig = {
   isPremium: false,
   thumbnail: "/themes/executive.png",
   colors: {
-    primary: "#3D2E5C",
-    secondary: "#FFD700",
-    accent: "#FF6B6B",
+    primary: "#1E40AF",
+    secondary: "#60A5FA",
+    accent: "#F4B740",
     background: "#FFFFFF",
+    textDark: "#0F172A",
+    textLight: "#FFFFFF",
     surface: "#F5F5F5",
     text: "#1F2937",
-    textLight: "#6B7280",
-    textDark: "#111827",
     border: "#E5E7EB",
     success: "#10B981",
     warning: "#F59E0B",
-    error: "#EF4444",
   },
   fonts: {
     heading: {

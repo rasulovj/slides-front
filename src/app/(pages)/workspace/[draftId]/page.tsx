@@ -9,12 +9,14 @@ import {
   ChevronLeft,
   Settings,
   Eye,
+  Download,
 } from "lucide-react";
 import { toast } from "sonner";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import { SlideRenderer, ThemeSelector } from "../components";
 import { useDraft, useUpdateDraft } from "@/services";
-
-import { exportToPPTX } from "@/lib/utills/exportToPptx";
+import { getTheme } from "@/lib/themes";
+import { SlidePDF } from "@/lib/themes/export";
 
 export default function SlideEditor({
   params,
@@ -62,7 +64,9 @@ export default function SlideEditor({
       </div>
     );
 
-  const activeSlide = draft?.slides?.[activeSlideIndex];
+  const slides = draft.slides;
+  const theme = getTheme(draft.themeSlug);
+  const activeSlide = slides?.[activeSlideIndex];
 
   return (
     <div className="h-screen w-full flex flex-col bg-gray-50">
@@ -100,18 +104,36 @@ export default function SlideEditor({
             <Eye className="w-4 h-4" />
             Preview
           </button>
-          {/* <button
-            onClick={() => {
-              const activeTheme = themes.find(
-                (t) => t.config.id === draft.themeSlug
-              )?.config;
-              if (draft?.slides)
-                exportToPPTX(draft.slides, draft.title, activeTheme);
-            }}
-            className="flex items-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg"
-          >
-            Export PPTX
-          </button> */}
+          {theme && slides.length > 0 ? (
+            <PDFDownloadLink
+              document={
+                <SlidePDF
+                  slides={slides}
+                  theme={theme.config}
+                  themeId={draft.themeSlug}
+                />
+              }
+              fileName={`${draft.title || "presentation"}.pdf`}
+            >
+              {({ loading }) => (
+                <button
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
+                  disabled={loading}
+                >
+                  <Download className="w-4 h-4" />
+                  {loading ? "Generating PDF..." : "Download PDF"}
+                </button>
+              )}
+            </PDFDownloadLink>
+          ) : (
+            <button
+              className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 opacity-50 cursor-not-allowed"
+              disabled
+            >
+              <Download className="w-4 h-4" />
+              Download PDF
+            </button>
+          )}
         </div>
       </header>
 
