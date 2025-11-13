@@ -10,6 +10,7 @@ import {
   Settings,
   Eye,
   Download,
+  FileText,
 } from "lucide-react";
 import { toast } from "sonner";
 import { PDFDownloadLink } from "@react-pdf/renderer";
@@ -17,6 +18,7 @@ import { SlideRenderer, ThemeSelector } from "../components";
 import { useDraft, useUpdateDraft } from "@/services";
 import { getTheme } from "@/lib/themes";
 import { SlidePDF } from "@/lib/themes/export";
+import { exportPDFAsPPTX } from "@/lib/themes/exportPPTX";
 
 export default function SlideEditor({
   params,
@@ -28,6 +30,7 @@ export default function SlideEditor({
   const updateDraftMutation = useUpdateDraft(draftId);
   const [showThemeSelector, setShowThemeSelector] = useState(false);
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
+  const [isExportingPPTX, setIsExportingPPTX] = useState(false);
 
   const handleThemeSelect = useCallback(
     (themeSlug: string) => {
@@ -49,6 +52,36 @@ export default function SlideEditor({
     },
     [draft, updateDraftMutation]
   );
+
+  const handleExportPPTX = async () => {
+    if (!draft || !theme) {
+      toast.error("Cannot export: Missing draft or theme");
+      return;
+    }
+
+    setIsExportingPPTX(true);
+    try {
+      toast.loading("Converting to PPTX...", { id: "pptx-export" });
+
+      await exportPDFAsPPTX({
+        slides: draft.slides,
+        theme: theme.config,
+        themeId: draft.themeSlug,
+        title: draft.title,
+        draftId: draftId,
+        SlidePDFComponent: SlidePDF,
+      });
+
+      toast.dismiss("pptx-export");
+      toast.success("PPTX exported successfully!");
+    } catch (error: any) {
+      toast.dismiss("pptx-export");
+      toast.error(error.message || "Failed to export PPTX");
+      console.error("Export error:", error);
+    } finally {
+      setIsExportingPPTX(false);
+    }
+  };
 
   if (isLoading)
     return (
@@ -85,7 +118,7 @@ export default function SlideEditor({
           </h1>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <span className="text-xs text-gray-500 font-medium">
             {updateDraftMutation.isPending ? (
               <span className="flex items-center gap-1">
@@ -104,6 +137,8 @@ export default function SlideEditor({
             <Eye className="w-4 h-4" />
             Preview
           </button>
+
+          {/* ✅ Download PDF Button */}
           {theme && slides.length > 0 ? (
             <PDFDownloadLink
               document={
@@ -132,6 +167,29 @@ export default function SlideEditor({
             >
               <Download className="w-4 h-4" />
               Download PDF
+            </button>
+          )}
+
+          {theme && slides.length > 0 ? (
+            <button
+              onClick={handleExportPPTX}
+              disabled={isExportingPPTX}
+              className="flex items-center gap-2 px-3 py-2 text-sm text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isExportingPPTX ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <FileText className="w-4 h-4" />
+              )}
+              {isExportingPPTX ? "Exporting..." : "Export PPTX"}
+            </button>
+          ) : (
+            <button
+              className="flex items-center gap-2 px-3 py-2 text-sm text-white bg-blue-400 opacity-50 cursor-not-allowed rounded-lg"
+              disabled
+            >
+              <FileText className="w-4 h-4" />
+              Export PPTX
             </button>
           )}
         </div>

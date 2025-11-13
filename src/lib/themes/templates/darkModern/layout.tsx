@@ -513,57 +513,6 @@ export const DarkModernLayouts = {
     </div>
   ),
 
-  chart: ({ slide, theme }: SlideLayoutProps) => (
-    <div
-      className="w-full h-full p-20"
-      style={{ background: theme.colors.background }}
-    >
-      <h2
-        className="text-6xl font-bold mb-12"
-        style={{
-          color: theme.colors.text,
-          fontFamily: theme.fonts.heading.family,
-        }}
-      >
-        {slide.title}
-      </h2>
-
-      <div className="flex items-end justify-around h-[600px] gap-8">
-        {slide.chartData?.map((item, idx) => (
-          <div key={idx} className="flex flex-col items-center flex-1 h-full">
-            <div className="flex-1 w-full flex items-end">
-              <div
-                className="w-full rounded-t-3xl transition-all duration-500 flex items-end justify-center pb-8 relative overflow-hidden"
-                style={{
-                  height: `${item.value}%`,
-                  background: `linear-gradient(to top, ${theme.colors.primary}, ${theme.colors.secondary})`,
-                  boxShadow: `0 0 40px ${theme.colors.primary}60`,
-                }}
-              >
-                {/* Glow effect */}
-                <div
-                  className="absolute inset-0 opacity-50"
-                  style={{
-                    background: `linear-gradient(to top, transparent, ${theme.colors.primary}40)`,
-                  }}
-                />
-                <span className="text-4xl font-bold text-white relative z-10">
-                  {item.value}%
-                </span>
-              </div>
-            </div>
-            <div
-              className="mt-6 text-2xl font-semibold"
-              style={{ color: theme.colors.text }}
-            >
-              {item.label}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  ),
-
   timeline: ({ slide, theme }: SlideLayoutProps) => (
     <div
       className="w-full h-full p-20"

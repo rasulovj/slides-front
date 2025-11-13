@@ -52,9 +52,9 @@ export const ExecutiveLayouts = {
 
       <div className="relative z-10 h-full flex flex-col justify-center px-20">
         <h1
-          className="text-7xl font-bold leading-tight max-w-4xl"
+          className="text-8xl font-bold leading-tight max-w-5xl"
           style={{
-            color: "#333",
+            color: "#002f6e",
             fontFamily: theme.fonts.heading.family,
             fontWeight: theme.fonts.heading.weight.bold,
           }}
@@ -445,115 +445,6 @@ export const ExecutiveLayouts = {
               </div>
             </div>
           ))}
-        </div>
-      </div>
-    );
-  },
-
-  chart: ({ slide, theme }: SlideLayoutProps) => {
-    // 🧠 Parse chart data intelligently
-    let chartData: { label: string; value: number }[] = [];
-
-    if (slide.chartData && slide.chartData.length > 0) {
-      // Use structured data if available
-      chartData = slide.chartData;
-    } else if (slide.content && slide.content.length > 4) {
-      // Handle flat format
-      const content = slide.content as string[];
-      const [, , ...pairs] = content; // skip headers (Year, Units Sold)
-      for (let i = 0; i < pairs.length; i += 2) {
-        const label = pairs[i];
-        const value = parseFloat(pairs[i + 1]);
-        if (label && !isNaN(value)) {
-          chartData.push({ label, value });
-        }
-      }
-    }
-
-    if (chartData.length === 0) {
-      return (
-        <div
-          className="w-full h-full flex items-center justify-center text-4xl text-gray-500"
-          style={{ background: theme.colors.background }}
-        >
-          No chart data available
-        </div>
-      );
-    }
-
-    // Calculate max value for scaling
-    const maxValue = Math.max(...chartData.map((d) => d.value));
-
-    return (
-      <div
-        className="w-full h-full p-20 flex flex-col"
-        style={{ background: theme.colors.background }}
-      >
-        <div
-          className="absolute top-0 left-0 right-0 h-48 flex items-center px-20 mb-12"
-          style={{ background: theme.colors.primary }}
-        >
-          <h2
-            className="text-5xl font-bold"
-            style={{
-              color: "#FFFFFF",
-              fontFamily: theme.fonts.heading.family,
-            }}
-          >
-            {slide.title}
-          </h2>
-        </div>
-
-        <div
-          className="absolute top-0 right-0 w-32 h-56"
-          style={{
-            background: theme.colors.secondary,
-            clipPath: "polygon(100% 0, 0 0, 100% 100%)",
-          }}
-        />
-
-        <div className="flex-1 flex items-end justify-around gap-10 pb-10 pt-52">
-          {chartData.map((item, idx) => {
-            const heightPercent = (item.value / maxValue) * 100;
-
-            return (
-              <div
-                key={idx}
-                className="flex flex-col items-center justify-end flex-1 h-full"
-              >
-                <div
-                  className="w-full rounded-t-3xl flex items-end justify-center transition-all duration-500"
-                  style={{
-                    height: `${heightPercent}%`,
-                    background: `linear-gradient(to top, ${theme.colors.primary}, ${theme.colors.secondary})`,
-                  }}
-                >
-                  <span
-                    className="text-3xl font-bold text-white mb-4"
-                    style={{
-                      fontFamily: theme.fonts.heading.family,
-                    }}
-                  >
-                    {item.value}
-                  </span>
-                </div>
-                <div
-                  className="mt-4 text-2xl font-semibold"
-                  style={{
-                    color: theme.colors.text,
-                    fontFamily: theme.fonts.body.family,
-                  }}
-                >
-                  {item.label}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* X-axis label */}
-        <div className="mt-6 text-center text-2xl text-gray-500">
-          (in Millions)
         </div>
       </div>
     );

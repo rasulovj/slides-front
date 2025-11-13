@@ -127,18 +127,13 @@ export interface TimelineEvent {
 
 export interface ComparisonItem {
   aspect?: string;
-  samsung?: string;
-  apple?: string;
 }
 
-// Type union for all valid content item types
 export type SlideContentItem =
   | string
   | SlideSection
   | TimelineEvent
   | ComparisonItem;
-
-/* ------------ THEME & LAYOUT TYPES ------------ */
 
 export interface SlideData {
   id: string;
@@ -154,12 +149,6 @@ export interface SlideData {
     value: string;
     description?: string;
     icon?: string;
-  }>;
-
-  chartData?: Array<{
-    label: string;
-    value: number;
-    color?: string;
   }>;
 
   quote?: {
@@ -183,7 +172,6 @@ export interface ThemeLayouts {
   stats: React.ComponentType<SlideLayoutProps>;
   comparison: React.ComponentType<SlideLayoutProps>;
   cards: React.ComponentType<SlideLayoutProps>;
-  chart: React.ComponentType<SlideLayoutProps>;
   timeline: React.ComponentType<SlideLayoutProps>;
   quote: React.ComponentType<SlideLayoutProps>;
   twoColumn: React.ComponentType<SlideLayoutProps>;

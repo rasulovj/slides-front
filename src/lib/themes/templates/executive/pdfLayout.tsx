@@ -1,28 +1,19 @@
-import {
-  Document,
-  Page,
-  View,
-  Text,
-  StyleSheet,
-  Font,
-} from "@react-pdf/renderer";
+import { Page, View, Text, StyleSheet, Font } from "@react-pdf/renderer";
 import { SlideLayoutProps, SlideContentItem } from "../../types";
 
-// Register font
-Font.register({
-  family: "Helvetica",
-  fonts: [
-    {
-      src: "https://fonts.gstatic.com/s/helvetica/v12/7cHpv4kjgoGqM7E_DMs5yng.woff2",
-    },
-    {
-      src: "https://fonts.gstatic.com/s/helvetica/v12/7cHrv4kjgoGqM7E3b8s8yn4.woff2",
-      fontWeight: "bold",
-    },
-  ],
-});
+// Font.register({
+//   family: "Lexend",
+//   fonts: [
+//     {
+//       src: "/fonts/lexend/Lexend-Regular.ttf",
+//     },
+//     {
+//       src: "/fonts/lexend/Lexend-Bold.ttf",
+//       fontWeight: "bold",
+//     },
+//   ],
+// });
 
-// Base styles (shared across slides)
 const createBaseStyles = (theme: SlideLayoutProps["theme"]) =>
   StyleSheet.create({
     page: {
@@ -30,7 +21,7 @@ const createBaseStyles = (theme: SlideLayoutProps["theme"]) =>
       position: "relative",
       width: 1920,
       height: 1080,
-      fontFamily: "Helvetica",
+      // fontFamily: "Lexend",
       overflow: "hidden",
     },
   });
@@ -44,7 +35,7 @@ const createTitleStyles = (theme: SlideLayoutProps["theme"]) =>
       top: 940,
       width: 256,
       height: 200,
-      backgroundColor: theme.colors.accent || "#FBBF24",
+      backgroundColor: "#FBBF24",
       transform: "rotate(20deg)",
       zIndex: 4,
     },
@@ -68,7 +59,6 @@ const createTitleStyles = (theme: SlideLayoutProps["theme"]) =>
       transform: "rotate(-12deg)",
       zIndex: 2,
     },
-
     titlePage: {
       flexDirection: "column",
       justifyContent: "center",
@@ -77,21 +67,20 @@ const createTitleStyles = (theme: SlideLayoutProps["theme"]) =>
       height: "100%",
       zIndex: 10,
     },
-
     title: {
-      fontSize: 72,
+      fontSize: 96,
       fontWeight: "bold",
-      color: theme.colors.text || "#1F2937",
-      maxWidth: 896,
+      color: theme.colors.text || "#002f6e",
+      maxWidth: 1200,
     },
     subtitleBox: {
-      fontSize: 24,
+      fontSize: 32,
       color: theme.colors.textLight || "#FFFFFF",
       marginTop: 40,
       backgroundColor: theme.colors.primary || "#1E40AF",
-      padding: 12,
+      padding: 14,
       borderRadius: 8,
-      maxWidth: 480,
+      maxWidth: 520,
     },
   });
 
@@ -99,12 +88,10 @@ export const TitlePage = ({ slide, theme }: SlideLayoutProps) => {
   const styles = createTitleStyles(theme);
   return (
     <Page size={{ width: 1920, height: 1080 }} style={styles.page}>
-      {/* Background shapes */}
       <View style={styles.shapePrimary} fixed />
       <View style={styles.shapeSecondary} fixed />
       <View style={styles.shapeAccent} fixed />
 
-      {/* Foreground text */}
       <View style={styles.titlePage}>
         <Text style={styles.title}>{slide.title || "Untitled"}</Text>
         {slide.subtitle && (
@@ -117,22 +104,20 @@ export const TitlePage = ({ slide, theme }: SlideLayoutProps) => {
   );
 };
 
-/* ==========================================================
-   2️⃣ PLAN PAGE LAYOUT
-========================================================== */
 const createPlanStyles = (theme: SlideLayoutProps["theme"]) =>
   StyleSheet.create({
     ...createBaseStyles(theme),
     planHeader: {
       backgroundColor: theme.colors.primary || "#1E40AF",
       padding: 20,
+      paddingHorizontal: 80,
       flexDirection: "row",
       alignItems: "center",
       position: "absolute",
       top: 0,
       left: 0,
       right: 0,
-      height: 100,
+      height: 180,
     },
     planTitle: {
       fontSize: 48,
@@ -140,20 +125,20 @@ const createPlanStyles = (theme: SlideLayoutProps["theme"]) =>
       color: "#FFFFFF",
     },
     planContent: {
-      marginTop: 140,
+      marginTop: 220,
       flexDirection: "column",
       paddingHorizontal: 80,
-      gap: 20,
+      gap: 24,
     },
     planItem: {
-      padding: 20,
+      padding: 42,
       borderWidth: 1,
       borderColor: "#E5E7EB",
-      borderRadius: 8,
+      borderRadius: 16,
       backgroundColor: "#FFFFFF",
     },
     planText: {
-      fontSize: 20,
+      fontSize: 24,
       color: theme.colors.text || "#1F2937",
     },
   });
@@ -178,28 +163,36 @@ export const PlanPage = ({ slide, theme }: SlideLayoutProps) => {
   );
 };
 
-/* ==========================================================
-   3️⃣ CONTENT PAGE LAYOUT
-========================================================== */
 const createContentStyles = (theme: SlideLayoutProps["theme"]) =>
   StyleSheet.create({
     ...createBaseStyles(theme),
+    contentHeader: {
+      backgroundColor: theme.colors.primary || "#1E40AF",
+      padding: 20,
+      paddingHorizontal: 80,
+      flexDirection: "row",
+      alignItems: "center",
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      height: 180,
+    },
     contentPage: {
       flexDirection: "column",
       paddingHorizontal: 80,
-      paddingTop: 120,
+      paddingTop: 220,
+      gap: 24,
     },
     contentTitle: {
-      fontSize: 56,
+      fontSize: 48,
       fontWeight: "bold",
-      color: theme.colors.primary || "#1E40AF",
-      marginBottom: 40,
+      color: "#FFFFFF",
     },
     contentText: {
-      fontSize: 20,
+      fontSize: 30,
       color: theme.colors.text || "#1F2937",
-      marginBottom: 16,
-      lineHeight: 1.5,
+      marginBottom: 12,
     },
   });
 
@@ -207,11 +200,13 @@ export const ContentPage = ({ slide, theme }: SlideLayoutProps) => {
   const styles = createContentStyles(theme);
   return (
     <Page size={{ width: 1920, height: 1080 }} style={styles.page}>
-      <View style={styles.contentPage}>
+      <View style={styles.contentHeader}>
         <Text style={styles.contentTitle}>{slide.title || "Untitled"}</Text>
+      </View>
+      <View style={styles.contentPage}>
         {(slide.content || []).map((item: SlideContentItem, idx: number) => (
           <Text key={idx} style={styles.contentText}>
-            {typeof item === "string" ? item : JSON.stringify(item)}
+            • {typeof item === "string" ? item : JSON.stringify(item)}
           </Text>
         ))}
       </View>
@@ -219,9 +214,6 @@ export const ContentPage = ({ slide, theme }: SlideLayoutProps) => {
   );
 };
 
-/* ==========================================================
-   4️⃣ EXPORT LAYOUT MAP
-========================================================== */
 export const ExecutivePDFLayouts = {
   title: TitlePage,
   plan: PlanPage,

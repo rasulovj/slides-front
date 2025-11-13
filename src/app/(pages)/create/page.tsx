@@ -99,6 +99,9 @@ export default function CreatePage() {
                   <SelectItem value="8">8</SelectItem>
                   <SelectItem value="9">9</SelectItem>
                   <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="11">11</SelectItem>
+                  <SelectItem value="12">12</SelectItem>
+                  <SelectItem value="13">13</SelectItem>
                 </SelectContent>
               </Select>
             </div>

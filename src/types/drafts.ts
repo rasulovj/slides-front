@@ -1,7 +1,7 @@
 // lib/types/draft.ts
 export interface Slide {
   id: string;
-  type: "title" | "content" | "stats" | "timeline" | "chart" | "closing";
+  type: "title" | "content" | "stats" | "timeline" | "closing";
   title: string;
   content: string[];
   position: number;
@@ -13,10 +13,7 @@ export interface Slide {
     value: string;
     description: string;
   }[];
-  chartData?: {
-    label: string;
-    value: number;
-  }[];
+
   notes?: string;
 }
 
