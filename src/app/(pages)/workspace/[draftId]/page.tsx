@@ -61,16 +61,16 @@ export default function SlideEditor({
 
     setIsExportingPPTX(true);
     try {
-      toast.loading("Converting to PPTX...", { id: "pptx-export" });
+      // toast.loading("Converting to PPTX...", { id: "pptx-export" });
 
-      await exportPDFAsPPTX({
-        slides: draft.slides,
-        theme: theme.config,
-        themeId: draft.themeSlug,
-        title: draft.title,
-        draftId: draftId,
-        SlidePDFComponent: SlidePDF,
-      });
+      // await exportPDFAsPPTX({
+      //   slides: draft.slides,
+      //   theme: theme.config,
+      //   themeId: draft.themeSlug,
+      //   title: draft.title,
+      //   draftId: draftId,
+      //   SlidePDFComponent: SlidePDF,
+      // });
 
       toast.dismiss("pptx-export");
       toast.success("PPTX exported successfully!");
@@ -138,7 +138,6 @@ export default function SlideEditor({
             Preview
           </button>
 
-          {/* ✅ Download PDF Button */}
           {theme && slides.length > 0 ? (
             <PDFDownloadLink
               document={
