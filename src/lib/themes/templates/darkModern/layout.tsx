@@ -1,4 +1,23 @@
 import { SlideLayoutProps } from "../../types";
+import type { SlideContentItem } from "../../types";
+
+const renderItemText = (item: SlideContentItem): string => {
+  if (typeof item === "string") return item;
+  if (typeof item === "object" && item !== null) {
+    if ("title" in item && "points" in item) {
+      return `${item.title}: ${
+        Array.isArray(item.points) ? item.points.join(", ") : ""
+      }`;
+    }
+    if ("year" in item && "event" in item) {
+      return `${item.year} — ${item.event}`;
+    }
+    if ("aspect" in item && "samsung" in item && "apple" in item) {
+      return `${item.aspect}: ${item.samsung} vs ${item.apple}`;
+    }
+  }
+  return JSON.stringify(item);
+};
 
 export const DarkModernLayouts = {
   title: ({ slide, theme }: SlideLayoutProps) => (
@@ -102,7 +121,7 @@ export const DarkModernLayouts = {
                   fontFamily: theme.fonts.body.family,
                 }}
               >
-                {item}
+                {renderItemText(item)}
               </span>
             </div>
           </div>
@@ -110,6 +129,325 @@ export const DarkModernLayouts = {
       </div>
     </div>
   ),
+
+  plan: ({ slide, theme }: SlideLayoutProps) => (
+    <div
+      className="w-full h-full p-20 relative overflow-hidden"
+      style={{ background: theme.colors.background }}
+    >
+      {/* Background glow */}
+      <div
+        className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full blur-3xl opacity-20"
+        style={{
+          background: `radial-gradient(circle, ${theme.colors.primary}, transparent)`,
+        }}
+      />
+
+      <h2
+        className="text-6xl font-bold mb-16 pb-6 border-b-4 relative z-10"
+        style={{
+          color: theme.colors.text,
+          fontFamily: theme.fonts.heading.family,
+          borderColor: theme.colors.primary,
+          textShadow: `0 0 30px ${theme.colors.primary}50`,
+        }}
+      >
+        {slide.title}
+      </h2>
+
+      <div className="space-y-6 relative z-10">
+        {slide.content.map((item, idx) => (
+          <div
+            key={idx}
+            className="p-8 rounded-2xl backdrop-blur-sm border-l-4"
+            style={{
+              background: `${theme.colors.surface}80`,
+              borderColor: theme.colors.primary,
+              boxShadow: `0 0 20px ${theme.colors.primary}20`,
+            }}
+          >
+            <div className="flex items-start gap-6">
+              <span
+                className="text-3xl font-bold px-4 py-2 rounded-lg"
+                style={{
+                  background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
+                  color: theme.colors.text,
+                }}
+              >
+                {idx + 1}
+              </span>
+              <span
+                className="text-3xl flex-1 leading-relaxed"
+                style={{
+                  color: theme.colors.text,
+                  fontFamily: theme.fonts.body.family,
+                }}
+              >
+                {renderItemText(item)}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  ),
+
+  comparison: ({ slide, theme }: SlideLayoutProps) => {
+    if (!slide.content || slide.content.length < 4) {
+      return (
+        <div
+          className="w-full h-full flex items-center justify-center text-4xl"
+          style={{
+            background: theme.colors.background,
+            color: theme.colors.textLight,
+          }}
+        >
+          Not enough data for comparison
+        </div>
+      );
+    }
+
+    const isStructured = slide.content.every((c: any) => typeof c === "object");
+    let left: any = {};
+    let right: any = {};
+
+    if (isStructured) {
+      [left, right] = slide.content as any[];
+    } else {
+      const mid = Math.floor(slide.content.length / 2);
+      const leftTitle = slide.content[0];
+      const rightTitle = slide.content[mid];
+
+      left = {
+        title: leftTitle,
+        points: slide.content.slice(1, mid),
+      };
+      right = {
+        title: rightTitle,
+        points: slide.content.slice(mid + 1),
+      };
+    }
+
+    return (
+      <div
+        className="w-full h-full p-20 flex flex-col items-center justify-center relative overflow-hidden"
+        style={{ background: theme.colors.background }}
+      >
+        {/* Background effects */}
+        <div
+          className="absolute top-0 left-0 w-[500px] h-[500px] rounded-full blur-3xl opacity-20"
+          style={{
+            background: `radial-gradient(circle, ${theme.colors.primary}, transparent)`,
+          }}
+        />
+        <div
+          className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full blur-3xl opacity-20"
+          style={{
+            background: `radial-gradient(circle, ${theme.colors.secondary}, transparent)`,
+          }}
+        />
+
+        <h2
+          className="text-6xl font-bold mb-16 relative z-10"
+          style={{
+            color: theme.colors.text,
+            fontFamily: theme.fonts.heading.family,
+            textShadow: `0 0 30px ${theme.colors.primary}50`,
+          }}
+        >
+          {slide.title}
+        </h2>
+
+        <div className="relative grid grid-cols-2 gap-12 w-full max-w-6xl z-10">
+          {/* Left Column */}
+          <div
+            className="p-10 rounded-3xl backdrop-blur-sm border-2"
+            style={{
+              background: `${theme.colors.surface}80`,
+              borderColor: `${theme.colors.primary}50`,
+              boxShadow: `0 0 40px ${theme.colors.primary}30`,
+            }}
+          >
+            <h3
+              className="text-4xl font-bold mb-8 text-center"
+              style={{
+                color: theme.colors.primary,
+                fontFamily: theme.fonts.heading.family,
+                textShadow: `0 0 20px ${theme.colors.primary}50`,
+              }}
+            >
+              {left.title}
+            </h3>
+            <ul className="space-y-4">
+              {left.points?.map((p: string, i: number) => (
+                <li
+                  key={i}
+                  className="flex items-start gap-3 text-2xl leading-relaxed"
+                  style={{
+                    color: theme.colors.text,
+                    fontFamily: theme.fonts.body.family,
+                  }}
+                >
+                  <span
+                    className="text-3xl leading-none"
+                    style={{ color: theme.colors.primary }}
+                  >
+                    •
+                  </span>
+                  {p}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Right Column */}
+          <div
+            className="p-10 rounded-3xl backdrop-blur-sm border-2"
+            style={{
+              background: `${theme.colors.surface}80`,
+              borderColor: `${theme.colors.secondary}50`,
+              boxShadow: `0 0 40px ${theme.colors.secondary}30`,
+            }}
+          >
+            <h3
+              className="text-4xl font-bold mb-8 text-center"
+              style={{
+                color: theme.colors.secondary,
+                fontFamily: theme.fonts.heading.family,
+                textShadow: `0 0 20px ${theme.colors.secondary}50`,
+              }}
+            >
+              {right.title}
+            </h3>
+            <ul className="space-y-4">
+              {right.points?.map((p: string, i: number) => (
+                <li
+                  key={i}
+                  className="flex items-start gap-3 text-2xl leading-relaxed"
+                  style={{
+                    color: theme.colors.text,
+                    fontFamily: theme.fonts.body.family,
+                  }}
+                >
+                  <span
+                    className="text-3xl leading-none"
+                    style={{ color: theme.colors.secondary }}
+                  >
+                    •
+                  </span>
+                  {p}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* VS Badge */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+            <div
+              className="text-5xl font-extrabold px-8 py-4 rounded-full"
+              style={{
+                background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
+                color: theme.colors.text,
+                fontFamily: theme.fonts.heading.family,
+                boxShadow: `0 0 40px ${theme.colors.primary}60`,
+              }}
+            >
+              VS
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  },
+
+  cards: ({ slide, theme }: SlideLayoutProps) => {
+    if (!slide.content || slide.content.length === 0) {
+      return (
+        <div
+          className="w-full h-full flex items-center justify-center text-4xl"
+          style={{
+            background: theme.colors.background,
+            color: theme.colors.textLight,
+          }}
+        >
+          No content available
+        </div>
+      );
+    }
+
+    const parseCard = (item: string) => {
+      if (typeof item !== "string") return { title: "Untitled", desc: "" };
+      const [title, ...descParts] = item.split(":");
+      return {
+        title: title.trim(),
+        desc: descParts.join(":").trim(),
+      };
+    };
+
+    return (
+      <div
+        className="w-full h-full p-20 flex flex-col relative overflow-hidden"
+        style={{ background: theme.colors.background }}
+      >
+        {/* Background glow */}
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full blur-3xl opacity-20"
+          style={{
+            background: `radial-gradient(circle, ${theme.colors.primary}, transparent)`,
+          }}
+        />
+
+        <h2
+          className="text-6xl font-bold mb-16 relative z-10"
+          style={{
+            color: theme.colors.text,
+            fontFamily: theme.fonts.heading.family,
+            textShadow: `0 0 30px ${theme.colors.primary}50`,
+          }}
+        >
+          {slide.title}
+        </h2>
+
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-10 flex-1 relative z-10">
+          {slide.content.map((item, idx) => {
+            const { title, desc } = parseCard(item as string);
+
+            return (
+              <div
+                key={idx}
+                className="flex flex-col justify-between p-8 rounded-3xl backdrop-blur-sm border-2 transition-transform hover:scale-105"
+                style={{
+                  background: `${theme.colors.surface}80`,
+                  borderColor: `${theme.colors.primary}30`,
+                  boxShadow: `0 0 30px ${theme.colors.primary}20`,
+                }}
+              >
+                <h3
+                  className="text-3xl font-semibold mb-4"
+                  style={{
+                    color: theme.colors.primary,
+                    fontFamily: theme.fonts.heading.family,
+                    textShadow: `0 0 15px ${theme.colors.primary}50`,
+                  }}
+                >
+                  {title}
+                </h3>
+                <p
+                  className="text-2xl leading-relaxed flex-1"
+                  style={{
+                    color: theme.colors.text,
+                    fontFamily: theme.fonts.body.family,
+                  }}
+                >
+                  {desc}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  },
 
   stats: ({ slide, theme }: SlideLayoutProps) => (
     <div
@@ -268,7 +606,7 @@ export const DarkModernLayouts = {
                 fontFamily: theme.fonts.body.family,
               }}
             >
-              {item}
+              {renderItemText(item)}
             </p>
           </div>
         ))}
@@ -359,7 +697,7 @@ export const DarkModernLayouts = {
                       fontFamily: theme.fonts.body.family,
                     }}
                   >
-                    {item}
+                    {renderItemText(item)}
                   </span>
                 </li>
               ))}
@@ -390,7 +728,7 @@ export const DarkModernLayouts = {
                       fontFamily: theme.fonts.body.family,
                     }}
                   >
-                    {item}
+                    {renderItemText(item)}
                   </span>
                 </li>
               ))}
@@ -443,7 +781,7 @@ export const DarkModernLayouts = {
               fontFamily: theme.fonts.body.family,
             }}
           >
-            {slide.content[0]}
+            {slide.content[0] ? renderItemText(slide.content[0]) : ""}
           </p>
         )}
 
