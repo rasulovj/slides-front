@@ -40,7 +40,7 @@ export const convertPDFToPPTX = async (
   draftId: string,
   title: string
 ): Promise<{ downloadUrl: string; presentation: any }> => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+  const apiUrl = process.env.NEXT_PUBLIC_BACK_URL || "http://localhost:8080";
 
   const formData = new FormData();
   formData.append("pdf", pdfBlob, `${title}.pdf`);
