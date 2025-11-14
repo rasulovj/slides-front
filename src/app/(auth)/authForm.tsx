@@ -172,7 +172,7 @@ export function AuthForm({ mode }: AuthFormProps) {
                 <Button
                   onClick={() => {
                     window.location.href =
-                      "http://localhost:8080/api/auth/google";
+                      "https://slides-back-4.onrender.com/api/auth/google";
                   }}
                   variant="outline"
                   className="flex items-center gap-2 w-full rounded-xl border-gray-300 hover:bg-gray-50"

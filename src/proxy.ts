@@ -5,7 +5,6 @@ export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get("access_token")?.value;
 
-  // ✅ 1. Ignore next.js assets & api routes & google callback
   if (
     pathname.startsWith("/api") ||
     pathname.startsWith("/_next") ||
