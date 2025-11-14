@@ -43,6 +43,7 @@ export function AuthForm({ mode }: AuthFormProps) {
           }
         );
         Cookies.set("access_token", res.accessToken);
+        Cookies.set("refresh_token", res.refreshToken);
         router.push("/");
       },
       onError: (error: Error) => {
@@ -169,6 +170,10 @@ export function AuthForm({ mode }: AuthFormProps) {
 
               <div className="flex justify-center">
                 <Button
+                  onClick={() => {
+                    window.location.href =
+                      "http://localhost:8080/api/auth/google";
+                  }}
                   variant="outline"
                   className="flex items-center gap-2 w-full rounded-xl border-gray-300 hover:bg-gray-50"
                 >

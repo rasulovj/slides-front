@@ -26,14 +26,16 @@ api.interceptors.response.use(
       try {
         const { data } = await axios.post(
           `${process.env.NEXT_PUBLIC_BACK_URL}/api/auth/refresh`,
-          {},
+          null,
           { withCredentials: true }
         );
 
-        Cookies.set("access_token", data.access_token);
-        api.defaults.headers.common.Authorization = `Bearer ${data.access_token}`;
+        Cookies.set("access_token", data.accessToken);
+        api.defaults.headers.common.Authorization = `Bearer ${data.accessToken}`;
         return api(originalRequest);
       } catch (err) {
+        Cookies.remove("access_token");
+        window.location.href = "/login";
         console.error("Refresh token failed", err);
       }
     }

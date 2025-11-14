@@ -111,29 +111,19 @@ export interface ThemeConfig {
   };
 }
 
-/* ------------ SLIDE DATA STRUCTURE ------------ */
-
-// Common slide content formats
 export interface SlideSection {
   title?: string;
   points?: string[];
   description?: string;
 }
 
-export interface TimelineEvent {
-  year?: string;
-  event?: string;
-}
-
-export interface ComparisonItem {
+export type ComparisonItem = {
   aspect?: string;
-}
+} & {
+  [key: string]: string | number | undefined;
+};
 
-export type SlideContentItem =
-  | string
-  | SlideSection
-  | TimelineEvent
-  | ComparisonItem;
+export type SlideContentItem = string | SlideSection | ComparisonItem;
 
 export interface SlideData {
   id: string;
@@ -172,7 +162,6 @@ export interface ThemeLayouts {
   stats: React.ComponentType<SlideLayoutProps>;
   comparison: React.ComponentType<SlideLayoutProps>;
   cards: React.ComponentType<SlideLayoutProps>;
-  timeline: React.ComponentType<SlideLayoutProps>;
   quote: React.ComponentType<SlideLayoutProps>;
   twoColumn: React.ComponentType<SlideLayoutProps>;
   closing: React.ComponentType<SlideLayoutProps>;

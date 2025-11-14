@@ -19,6 +19,7 @@ import { useDraft, useUpdateDraft } from "@/services";
 import { getTheme } from "@/lib/themes";
 import { SlidePDF } from "@/lib/themes/export";
 import { exportPDFAsPPTX } from "@/lib/themes/exportPPTX";
+import { Button } from "@/components";
 
 export default function SlideEditor({
   params,
@@ -170,10 +171,10 @@ export default function SlideEditor({
           )}
 
           {theme && slides.length > 0 ? (
-            <button
+            <Button
               onClick={handleExportPPTX}
               disabled={isExportingPPTX}
-              className="flex items-center gap-2 px-3 py-2 text-sm text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-3 py-2 text-sm text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isExportingPPTX ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -181,7 +182,7 @@ export default function SlideEditor({
                 <FileText className="w-4 h-4" />
               )}
               {isExportingPPTX ? "Exporting..." : "Export PPTX"}
-            </button>
+            </Button>
           ) : (
             <button
               className="flex items-center gap-2 px-3 py-2 text-sm text-white bg-blue-400 opacity-50 cursor-not-allowed rounded-lg"

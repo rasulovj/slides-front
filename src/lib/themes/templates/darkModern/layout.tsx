@@ -12,8 +12,21 @@ const renderItemText = (item: SlideContentItem): string => {
     if ("year" in item && "event" in item) {
       return `${item.year} — ${item.event}`;
     }
-    if ("aspect" in item && "samsung" in item && "apple" in item) {
-      return `${item.aspect}: ${item.samsung} vs ${item.apple}`;
+    if ("aspect" in item) {
+      const { aspect, ...rest } = item as Record<string, unknown>;
+      const comparisons = Object.values(rest)
+        .filter((value): value is string | number => {
+          return (
+            (typeof value === "string" && value.trim().length > 0) ||
+            typeof value === "number"
+          );
+        })
+        .map((value) => `${value}`);
+
+      if (!aspect && comparisons.length === 0) return "";
+      if (!aspect) return comparisons.join(" vs ");
+      if (comparisons.length === 0) return `${aspect}`;
+      return `${aspect}: ${comparisons.join(" vs ")}`;
     }
   }
   return JSON.stringify(item);
@@ -507,56 +520,6 @@ export const DarkModernLayouts = {
                 </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  ),
-
-  timeline: ({ slide, theme }: SlideLayoutProps) => (
-    <div
-      className="w-full h-full p-20"
-      style={{ background: theme.colors.background }}
-    >
-      <h2
-        className="text-6xl font-bold mb-20"
-        style={{
-          color: theme.colors.text,
-          fontFamily: theme.fonts.heading.family,
-        }}
-      >
-        {slide.title}
-      </h2>
-
-      <div className="flex justify-around items-start gap-6">
-        {slide.content.slice(0, 4).map((item, idx) => (
-          <div
-            key={idx}
-            className="flex flex-col items-center text-center flex-1"
-          >
-            <div
-              className="w-28 h-28 rounded-full flex items-center justify-center text-5xl font-bold mb-8 relative"
-              style={{
-                background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
-                color: theme.colors.text,
-                boxShadow: `0 0 40px ${theme.colors.primary}60`,
-              }}
-            >
-              <div
-                className="absolute inset-0 rounded-full animate-ping opacity-20"
-                style={{ background: theme.colors.primary }}
-              />
-              <span className="relative z-10">{idx + 1}</span>
-            </div>
-            <p
-              className="text-2xl px-4 leading-relaxed"
-              style={{
-                color: theme.colors.text,
-                fontFamily: theme.fonts.body.family,
-              }}
-            >
-              {renderItemText(item)}
-            </p>
           </div>
         ))}
       </div>

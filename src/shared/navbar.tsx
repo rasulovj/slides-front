@@ -3,10 +3,11 @@ import { useGetMe } from "@/services/authServices";
 import Link from "next/link";
 import Logo from "../../public/logo.svg";
 import Image from "next/image";
+import { useTranslation } from "react-i18next";
 
 export const Navbar = () => {
   const { data } = useGetMe();
-  // console.log(data?.name);
+  const { t } = useTranslation();
 
   return (
     <nav className="w-full fixed top-0 left-0 z-50">
@@ -18,7 +19,7 @@ export const Navbar = () => {
 
         <div className="hidden md:flex gap-8 text-gray-700 font-medium">
           <Link href="#features" className="hover:text-blue-600 transition">
-            Features
+            {t("nav.home")}
           </Link>
           <Link href="#pricing" className="hover:text-blue-600 transition">
             Pricing

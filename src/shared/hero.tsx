@@ -2,11 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 export const Hero = () => {
+  const { t } = useTranslation();
+
   return (
     <section className="relative flex items-center justify-center min-h-screen w-full bg-white overflow-hidden">
-      {/* Background Gradient */}
       <div
         className="absolute inset-0 z-0"
         style={{
@@ -16,25 +18,22 @@ export const Hero = () => {
         }}
       />
 
-      {/* Content */}
       <div className="relative z-10 max-w-4xl text-center px-6">
         <h1 className="text-5xl md:text-6xl font-extrabold leading-tight text-gray-900">
-          Create <span className="text-teal-600">Beautiful Slides</span>
-          <br /> in Seconds
+          {t("hero.title")}
         </h1>
 
         <p className="mt-6 text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-          Turn your ideas into stunning presentations instantly. Choose a theme,
-          add your content, and let our AI do the rest.
+          {t("hero.subtitle")}
         </p>
 
         <div className="mt-10 flex justify-center gap-4">
           <Link href={"/workspace/slides"}>
-            <Button className="p-6">Get Started</Button>
+            <Button className="p-6">{t("hero.getStarted")}</Button>
           </Link>
           <Link href={"/workspace/slides"}>
             <Button variant={"outline"} className="p-6">
-              Learn More
+              {t("hero.learnMore")}
             </Button>
           </Link>
         </div>

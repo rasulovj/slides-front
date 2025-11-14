@@ -1,7 +1,7 @@
 // lib/types/draft.ts
 export interface Slide {
   id: string;
-  type: "title" | "content" | "stats" | "timeline" | "closing";
+  type: "title" | "content" | "stats" | "closing";
   title: string;
   content: string[];
   position: number;

@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/sidebar";
 
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 const data = {
   user: {
@@ -74,10 +75,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="offcanvas" {...props} className="">
       <SidebarHeader className="px-4 py-3">
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="p-2 rounded-xl bg-linear-to-r from-teal-500 to-teal-700">
-            <IconInnerShadowTop className="size-5 text-white" />
-          </div>
+        <Link href="/" className="flex items-center group">
+          {/* <IconInnerShadowTop className="size-5 text-white" /> */}
+          <Image src="/logo.svg" alt="SlideMind Logo" width={70} height={70} />
           <span className="font-semibold text-xl">SlideMind</span>
         </Link>
       </SidebarHeader>

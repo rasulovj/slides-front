@@ -1,0 +1,14 @@
+{
+  "nav": {
+    "feature": "Xususiyatlar",
+    "pricing": "Narxlash",
+    "login": "Kirish",
+    "signup": "Ro'yxatdan o'tish"
+  },
+  "hero": {
+    "title": "Bir necha soniyada chiroyli slaydlar yarating",
+    "subTitle": "G'oyalaringizni darhol hayratlanarli prezentatsiyalarga aylantiring. Mavzuni tanlang, kontentingizni qo'shing va qolganini AI bajarsin.",
+    "getStarted": "Boshlash",
+    "learMore": "Ko‘proq ma’lumot"
+  }
+}

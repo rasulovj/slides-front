@@ -1,0 +1,14 @@
+{
+  "nav": {
+    "feature": "Features",
+    "pricing": "Pricing",
+    "login": "Login",
+    "signup": "Sign up"
+  },
+  "hero": {
+    "title": "Create Beautiful Slides in Seconds",
+    "subTitle": "Turn your ideas into stunning presentations instantly. Choose a theme, add your content, and let our AI do the rest.",
+    "getStarted": "Get started",
+    "learMore": "Learn More"
+  }
+}

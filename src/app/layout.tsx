@@ -5,6 +5,7 @@ import NextTopLoader from "nextjs-toploader";
 import { HydrationProvider } from "react-hydration-provider";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
+import I18nProvider from "@/i18n/i18n-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,20 +32,22 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <HydrationProvider>
-          <NextTopLoader
-            color="var(--primary)"
-            initialPosition={0.5}
-            crawlSpeed={200}
-            height={3}
-            crawl
-            showSpinner={false}
-            easing="ease"
-            speed={200}
-            shadow="0 0 10px var(--primary), 0 0 5px var(--primary)"
-          />
-          <Providers>{children}</Providers>
-        </HydrationProvider>
+        <I18nProvider>
+          <HydrationProvider>
+            <NextTopLoader
+              color="var(--primary)"
+              initialPosition={0.5}
+              crawlSpeed={200}
+              height={3}
+              crawl
+              showSpinner={false}
+              easing="ease"
+              speed={200}
+              shadow="0 0 10px var(--primary), 0 0 5px var(--primary)"
+            />
+            <Providers>{children}</Providers>
+          </HydrationProvider>
+        </I18nProvider>
       </body>
       <GoogleAnalytics gaId="G-EMMLZCBB1Z" />
     </html>
